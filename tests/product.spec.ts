@@ -1,0 +1,62 @@
+import { test } from "@playwright/test";
+import { LoginPage } from "../pages/LoginPage";
+import { ProductPage } from "../pages/ProductPage";
+import { users } from "../test-data/users";
+import { products } from "../test-data/products";
+import { CartPage } from "../pages/CartPage";
+
+test.describe("Product Page Tests", () => {
+    test("TC01: Add a specific product to the cart", async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+        const cartPage = new CartPage(page);
+        const userData = users.validUser;
+        const productName = products.backpack.name;
+        const productPrice = products.backpack.price;
+
+        //Login valid credentials
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+        //Add specific product to cart
+        await productPage.addProductToCart(productName);
+        await productPage.verifyCartItemCount(1); // Verify that the cart badge shows 1 item
+
+        await cartPage.gotoCartPage();
+        await cartPage.verifyProductInCart(productName, productPrice); // Verify that the product is in the cart with the correct name and price
+
+    });
+
+    test("TC02: Add Two product in the cart and after remove the first product", async ({ page }) => {
+
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+        const cartPage = new CartPage(page);
+        const userData = users.validUser;
+        const productNameBackpack = products.backpack.name;
+        const productPriceBackpack = products.backpack.price;
+        const productNameBikelight = products.bikelight.name;
+        const productPriceBikelight = products.bikelight.price;
+
+
+
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+
+        await productPage.addProductToCart(productNameBackpack);
+        await productPage.addProductToCart(productNameBikelight);
+
+        await productPage.verifyCartItemCount(2);
+        await cartPage.gotoCartPage();
+
+        await cartPage.removeProductFromCart(productNameBackpack);
+        await cartPage.verifyProductIsRemoved(productNameBackpack);
+
+        await cartPage.verifyProductInCart(productNameBikelight, productPriceBikelight);
+
+        await productPage.gotoProductPage();
+        await productPage.verifyCartItemCount(1);
+
+
+    })
+
+});
