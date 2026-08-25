@@ -13,9 +13,9 @@ export class CartPage {
     constructor(page: Page) {
         this.page = page;
         this.cartTitle = page.getByRole('heading', { name: 'Your Cart' });
-        this.cartItems = page.getByTestId('cart_item');
-        this.cartItemNames = page.getByTestId('cart_item_label');
-        this.cartItemPrices = page.getByTestId('inventory_item_price');
+        this.cartItems = page.getByTestId('inventory-item');
+        this.cartItemNames = page.getByTestId('inventory-item-name');
+        this.cartItemPrices = page.getByTestId('inventory-item-price');
         this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' });
         this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
         this.removeButtons = page.getByRole('button', { name: 'Remove' });
@@ -28,11 +28,13 @@ export class CartPage {
     async verifyProductInCart(productName: string, productPrice: string) {
         const specificCartItem = this.cartItems.filter({ hasText: productName });
 
-        const specificCartItemName = specificCartItem.getByTestId('cart_item_label');
+        const specificCartItemName = specificCartItem.getByTestId('inventory-item-name');
+        console.log("Cart item count:", await specificCartItem.count());
+        console.log("Cart item name count:", await specificCartItemName.count());
         await expect(specificCartItemName).toHaveText(productName);
 
 
-        const specificCartItemPrice = specificCartItem.getByTestId('inventory_item_price');
+        const specificCartItemPrice = specificCartItem.getByTestId('inventory-item-price');
         await expect(specificCartItemPrice).toHaveText(productPrice);
     }
 

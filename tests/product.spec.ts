@@ -17,6 +17,11 @@ test.describe("Product Page Tests", () => {
         //Login valid credentials
         await loginPage.gotoLoginPage();
         await loginPage.login(userData.username, userData.password);
+        console.log("URL:", page.url());
+        console.log("Title:", await page.title());
+        await productPage.gotoProductPage();
+        console.log("Product page loaded");
+
         //Add specific product to cart
         await productPage.addProductToCart(productName);
         await productPage.verifyCartItemCount(1); // Verify that the cart badge shows 1 item
@@ -41,6 +46,7 @@ test.describe("Product Page Tests", () => {
 
         await loginPage.gotoLoginPage();
         await loginPage.login(userData.username, userData.password);
+        await productPage.gotoProductPage();
 
         await productPage.addProductToCart(productNameBackpack);
         await productPage.addProductToCart(productNameBikelight);
@@ -58,5 +64,18 @@ test.describe("Product Page Tests", () => {
 
 
     })
+
+    test("TC03: Sort products by price from low to high", async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+        const userData = users.validUser;
+
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+
+        await productPage.gotoProductPage();
+        await productPage.sortProductsLowToHigh();
+        await productPage.verifyProductSortedLowToHigh();
+    });
 
 });

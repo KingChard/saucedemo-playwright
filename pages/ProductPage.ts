@@ -16,14 +16,13 @@ export class ProductPage {
 
     constructor(page: Page) {
         this.page = page;
-        this.pageTitle = page.getByRole('heading', { name: 'Products' });
-        this.productList = page.getByTestId('inventory_list');
-        this.specificProduct = page.getByTestId('inventory_item');
-        this.productName = page.getByTestId('inventory_item_name');
-        this.productPrice = page.getByTestId('inventory_item_price');
-        this.shoppingCartBadge = page.getByTestId('shopping_cart_badge');
+        this.productList = page.getByTestId('inventory-list');
+        this.specificProduct = page.getByTestId('inventory-item');
+        this.productName = page.getByTestId('inventory-item-name');
+        this.productPrice = page.getByTestId('inventory-item-price');
+        this.shoppingCartBadge = page.getByTestId('shopping-cart-badge');
         this.shoppingCartButton = page.getByRole('link', { name: /shopping cart/i });
-        this.sortDropdown = page.getByTestId('product_sort_container');
+        this.sortDropdown = page.getByTestId('product-sort-container');
     }
 
     async gotoProductPage() {
@@ -33,6 +32,15 @@ export class ProductPage {
     async addProductToCart(productName: string) {
         const specificProduct = this.specificProduct.filter({ hasText: productName });
         const specificAddToCartButton = specificProduct.getByRole('button', { name: 'Add to cart' });
+        console.log(
+            "Product count:",
+            await specificProduct.count()
+        );
+
+        console.log(
+            "Add button count:",
+            await specificAddToCartButton.count()
+        );
         await specificAddToCartButton.click();
     }
 
@@ -42,9 +50,30 @@ export class ProductPage {
     }
 
     async getAllProductPrice() {
-        const allProductPrices = await this.page.getByTestId('inventory_item_price').allTextContents();
-        const productPrices = allProductPrices.map((price) => parseFloat(price.replace('$', '')));
+        const allProductPrices = await this.page
+            .getByTestId('inventory_item_price')
+            .allTextContents();
+
+        const productPrices = allProductPrices.map((price) =>
+            parseFloat(price.replace('$', ''))
+        );
+
         return productPrices;
+    }
+    async verifyProductSortedLowToHigh() {
+        const productPrices = await this.getAllProductPrice();
+
+        for (let i = 0; i < productPrices.length - 1; i++) {
+            if (productPrices[i] > productPrices[i + 1]) {
+                throw new Error(
+                    `Product prices are not sorted in ascending order: ${productPrices[i]} > ${productPrices[i + 1]}`
+                );
+            }
+        }
+    }
+
+    async sortProductsLowToHigh() {
+        await this.sortDropdown.selectOption({ label: 'Price (low to high)' });
     }
 
 }
