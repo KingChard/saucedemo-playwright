@@ -130,8 +130,8 @@ export class ProductPage {
     }
 
     async openProductDetails(productName: string) {
-        const specificProduct = this.specificProduct.filter({ hasText: productName });
-        const specificLinkName = specificProduct.getByRole('link', { name: productName });
+        const specificProducts = this.specificProduct.filter({ hasText: productName });
+        const specificLinkName = specificProducts.getByTestId('inventory-item-name');
         await specificLinkName.click();
     }
 }

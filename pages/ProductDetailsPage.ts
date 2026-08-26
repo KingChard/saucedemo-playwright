@@ -16,8 +16,31 @@ export class ProductDetailsPage {
     }
 
     async verifyProductDetails(productName: string, productPrice: string, productDescription: string) {
+        const productDetailImage = this.page.getByAltText(productName);
         await expect(this.productDetailName).toHaveText(productName);
         await expect(this.productDetailPrice).toHaveText(productPrice);
         await expect(this.productDetailDescription).toHaveText(productDescription);
+        await expect(productDetailImage).toBeVisible();
     }
+
+    async verifyProductName(productName: string) {
+        await expect(this.productDetailName).toHaveText(productName);
+    }
+
+    async verifyProductPrice(productPrice: string) {
+        await expect(this.productDetailPrice).toHaveText(productPrice);
+    }
+    async verifyProductDescription(productDescription: string) {
+        await expect(this.productDetailDescription).toHaveText(productDescription);
+    }
+
+    async verifyProductImage(productName: string) {
+        const productDetailImage = this.page.getByAltText(productName);
+        await expect(productDetailImage).toBeVisible();
+    }
+
+    async addProductToCartFromDetailsPage() {
+        await this.addToCartDetailButton.click();
+    }
+
 }
