@@ -16,6 +16,7 @@ export class ProductPage {
 
     constructor(page: Page) {
         this.page = page;
+        this.pageTitle = page.getByTestId('title');
         this.productList = page.getByTestId('inventory-list');
         this.specificProduct = page.getByTestId('inventory-item');
         this.productName = page.getByTestId('inventory-item-name');
@@ -60,6 +61,10 @@ export class ProductPage {
 
         return productPrices;
     }
+
+    async sortProductsLowToHigh() {
+        await this.sortDropdown.selectOption({ label: 'Price (low to high)' });
+    }
     async verifyProductSortedLowToHigh() {
         const productPrices = await this.getAllProductPrice();
 
@@ -72,8 +77,61 @@ export class ProductPage {
         }
     }
 
-    async sortProductsLowToHigh() {
-        await this.sortDropdown.selectOption({ label: 'Price (low to high)' });
+    async sortProductsHighToLow() {
+        await this.sortDropdown.selectOption({ label: 'Price (high to low)' });
     }
 
+    async verifyProductSortedHighToLow() {
+        const productPrices = await this.getAllProductPrice();
+
+        for (let i = 0; i < productPrices.length - 1; i++) {
+            if (productPrices[i] < productPrices[i + 1]) {
+                throw new Error(
+                    `Product prices are not sorted in descending order: ${productPrices[i]} < ${productPrices[i + 1]}`
+                );
+            }
+        }
+    }
+
+    async getAllProductNames() {
+        const allProductNames = await this.page
+            .getByTestId('inventory_item_name')
+            .allTextContents();
+        return allProductNames;
+    }
+
+    async sortProductsNameAToZ() {
+        await this.sortDropdown.selectOption({ label: 'Name (A to Z)' });
+    }
+    async verifyProductNamesSortedAToZ() {
+        const productNames = await this.getAllProductNames();
+        for (let i = 0; i < productNames.length - 1; i++) {
+            if (productNames[i] > productNames[i + 1]) {
+                throw new Error(
+                    `Product names are not sorted alphabetically A to Z: ${productNames[i]} > ${productNames[i + 1]}`
+                );
+            }
+        }
+    }
+
+    async sortProductsNameZToA() {
+        await this.sortDropdown.selectOption({ label: 'Name (Z to A)' });
+    }
+
+    async verifyProductNamesSortedZToA() {
+        const productNames = await this.getAllProductNames();
+        for (let i = 0; i < productNames.length - 1; i++) {
+            if (productNames[i] < productNames[i + 1]) {
+                throw new Error(
+                    `Product names are not sorted alphabetically Z to A: ${productNames[i]} < ${productNames[i + 1]}`
+                );
+            }
+        }
+    }
+
+    async openProductDetails(productName: string) {
+        const specificProduct = this.specificProduct.filter({ hasText: productName });
+        const specificLinkName = specificProduct.getByRole('link', { name: productName });
+        await specificLinkName.click();
+    }
 }

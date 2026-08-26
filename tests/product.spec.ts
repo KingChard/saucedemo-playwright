@@ -78,4 +78,42 @@ test.describe("Product Page Tests", () => {
         await productPage.verifyProductSortedLowToHigh();
     });
 
+    test("TC04: Sort products by price from high to low", async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+        const userData = users.validUser;
+
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+
+        await productPage.gotoProductPage();
+        await productPage.sortProductsHighToLow();
+        await productPage.verifyProductSortedHighToLow();
+    });
+
+    test("TC05: Sort products by name from A to Z", async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+        const userData = users.validUser;
+
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+
+        await productPage.gotoProductPage();
+        await productPage.sortProductsNameAToZ();
+        await productPage.verifyProductNamesSortedAToZ();
+    });
+
+    test("TC06: Sort products by name from Z to A", async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+        const userData = users.validUser;
+
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+
+        await productPage.gotoProductPage();
+        await productPage.sortProductsNameZToA();
+        await productPage.verifyProductNamesSortedZToA();
+    });
 });
