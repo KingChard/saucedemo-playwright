@@ -6,6 +6,9 @@ export class ProductDetailsPage {
     readonly productDetailPrice: Locator;
     readonly productDetailDescription: Locator;
     readonly addToCartDetailButton: Locator;
+    readonly removeDetailButton: Locator;
+    readonly cartBadge: Locator;
+
 
     constructor(page: Page) {
         this.page = page;
@@ -13,6 +16,8 @@ export class ProductDetailsPage {
         this.productDetailPrice = page.getByTestId('inventory-item-price');
         this.productDetailDescription = page.getByTestId('inventory-item-desc');
         this.addToCartDetailButton = page.getByRole('button', { name: 'Add to cart' });
+        this.removeDetailButton = page.getByRole('button', { name: 'Remove' });
+        this.cartBadge = page.getByTestId('shopping-cart-badge');
     }
 
     async verifyProductDetails(productName: string, productPrice: string, productDescription: string) {
@@ -36,11 +41,27 @@ export class ProductDetailsPage {
 
     async verifyProductImage(productName: string) {
         const productDetailImage = this.page.getByAltText(productName);
-        await expect(productDetailImage).toBeVisible();
+        await expect(productDetailImage).toBeVisible
     }
 
     async addProductToCartFromDetailsPage() {
         await this.addToCartDetailButton.click();
     }
 
+    async verifyRemoveButtonIsDisplayed() {
+        await expect(this.removeDetailButton).toBeVisible();
+    }
+
+
+    async removeProductFromDetailsPage() {
+        await this.removeDetailButton.click();
+        // await expect(this.removeDetailButton).not.toBeVisible();
+        // await expect(this.addToCartDetailButton).toBeVisible();
+    }
+
+    async verifyRemoveProductFromDetailsPage() {
+        await expect(this.removeDetailButton).not.toBeVisible();
+        await expect(this.addToCartDetailButton).toBeVisible();
+        await expect(this.cartBadge).not.toBeVisible();
+    }
 }
