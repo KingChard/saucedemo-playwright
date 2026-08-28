@@ -22,12 +22,28 @@ export class ProductPage {
         this.productName = page.getByTestId('inventory-item-name');
         this.productPrice = page.getByTestId('inventory-item-price');
         this.shoppingCartBadge = page.getByTestId('shopping-cart-badge');
-        this.shoppingCartButton = page.getByRole('link', { name: /shopping cart/i });
+        this.shoppingCartButton = page.getByTestId('shopping-cart-link');
         this.sortDropdown = page.getByTestId('product-sort-container');
     }
 
     async gotoProductPage() {
         await this.page.goto('/inventory.html');
+    }
+
+    async verifyPageTitle() {
+        await expect(this.pageTitle).toBeVisible();
+    }
+
+    async verifyProductList() {
+        await expect(this.productList).toBeVisible();
+    }
+
+    async verifyProductPageUrl(){
+        await expect(this.page).toHaveURL('/inventory.html')
+    }
+
+    async OpenCartPage(){
+        await this.shoppingCartButton.click();
     }
 
     async addProductToCart(productName: string) {
@@ -48,6 +64,12 @@ export class ProductPage {
     async verifyCartItemCount(expectedCount: number) {
         await expect(this.shoppingCartBadge).toHaveText(expectedCount.toString());
 
+    }
+
+    async verifySpecificProductDisplayed(productName: string){
+        const specificProduct = this.specificProduct.filter({ hasText: productName });
+        const specificProductName = specificProduct.getByTestId('inventory-item-name');
+        await expect(specificProductName).toBeVisible();
     }
 
     async getAllProductPrice() {
@@ -133,5 +155,33 @@ export class ProductPage {
         const specificProducts = this.specificProduct.filter({ hasText: productName });
         const specificLinkName = specificProducts.getByTestId('inventory-item-name');
         await specificLinkName.click();
+    }
+
+    async removeButtonSpecificProduct(productName: string) {
+        const specificProducts = this.specificProduct.filter({ hasText: productName });
+        const specificRemoveButton = specificProducts.getByRole('button', { name: 'Remove' });
+        await expect(specificRemoveButton).toBeVisible();
+    }
+
+    async getProductName(productName: string) {
+        const specificProducts = this.specificProduct.filter({ hasText: productName });
+        const productNameElement = specificProducts.getByTestId('inventory-item-name');
+        return await productNameElement.textContent();
+    }
+
+    async getProductPrice(productName: string) {
+        const specificProduct = this.specificProduct.filter({ hasText: productName });
+
+        const productPriceElement =
+            specificProduct.getByTestId('inventory-item-price');
+
+        return await productPriceElement.textContent();
+    }
+
+    async getProductDescription(productName: string){
+        const specificProduct = this.specificProduct.filter({ hasText: productName });
+        const productDescElement = specificProduct.getByTestId('inventory-item-desc')
+
+        return await productDescElement.textContent();
     }
 }

@@ -25,6 +25,10 @@ export class CartPage {
         await this.page.goto('/cart.html');
     }
 
+    async verifyCartPageUrl(){
+        await expect(this.page).toHaveURL('/cart.html')
+    }
+
     async verifyProductInCart(productName: string, productPrice: string) {
         const specificCartItem = this.cartItems.filter({ hasText: productName });
 
