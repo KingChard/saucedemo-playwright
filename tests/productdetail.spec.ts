@@ -162,7 +162,7 @@ test.describe("Product Details Page Tests", () => {
         await loginPage.login(userData.username, userData.password);
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.returnToProductPage();
+        await productDetailPage.returnToProductsPage();
         await productPage.verifyPageTitle();
         await productPage.verifyProductList();
     });
@@ -178,8 +178,7 @@ test.describe("Product Details Page Tests", () => {
         await loginPage.login(userData.username, userData.password);
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.verifyBackToProductButtonDisplayed();
-        await productDetailPage.returnToProductPage();
+        await productDetailPage.verifyBackToProductsButtonDisplayed();
     });
 
     test("PDT-012: Verify Add to Cart Button is Displayed for a Product Not in Cart ", async ({ page }) => {
@@ -264,10 +263,53 @@ test.describe("Product Details Page Tests", () => {
         await productDetailPage.verifyAddToCartButtonIsDisplayed();
     });
 
-    test("PDT-017: Add Different Products from Product Details Page ", async ({ page }) => {
+    test("PDT-017A: Add Different Products from Product Details Page ", async ({ page }) => {
         const loginPage = new LoginPage(page);
         const productPage = new ProductPage(page);
         const cartPage = new CartPage(page);
+        const productDetailPage = new ProductDetailsPage(page);
+        const userData = users.validUser;
+        const productName = products.backpack.name;
+        const productPrice = products.backpack.price;
+
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+        await productPage.gotoProductPage();
+        await productPage.openProductDetails(productName);
+        await productDetailPage.addProductToCartFromDetailsPage();
+        await productPage.verifyCartItemCount(1);
+        await productDetailPage.verifyRemoveButtonIsDisplayed();
+        await productPage.openCartPage();
+        await cartPage.verifyCartPageUrl();
+        await cartPage.verifyProductInCart(productName,productPrice);
+    });
+
+    test("PDT-017B: Add Different Products from Product Details Page ", async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+        const cartPage = new CartPage(page);
+        const productDetailPage = new ProductDetailsPage(page);
+        const userData = users.validUser;
+        const productName = products.bikelight.name;
+        const productPrice = products.bikelight.price;
+
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+        await productPage.gotoProductPage();
+        await productPage.openProductDetails(productName);
+        await productDetailPage.addProductToCartFromDetailsPage();
+        await productPage.verifyCartItemCount(1);
+        await productDetailPage.verifyRemoveButtonIsDisplayed();
+        await productPage.openCartPage();
+        await cartPage.verifyCartPageUrl();
+        await cartPage.verifyProductInCart(productName,productPrice);
+    });
+
+    test("PDT-017C: Add Different Products from Product Details Page ", async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+        const cartPage = new CartPage(page);
+        const productDetailPage = new ProductDetailsPage(page);
         const userData = users.validUser;
         const productName = products.boltTShirt.name;
         const productPrice = products.boltTShirt.price;
@@ -275,9 +317,12 @@ test.describe("Product Details Page Tests", () => {
         await loginPage.gotoLoginPage();
         await loginPage.login(userData.username, userData.password);
         await productPage.gotoProductPage();
-        await productPage.addProductToCart(productName);
-        await productPage.removeButtonSpecificProduct(productName);
-        await cartPage.gotoCartPage();
+        await productPage.openProductDetails(productName);
+        await productDetailPage.addProductToCartFromDetailsPage();
+        await productPage.verifyCartItemCount(1);
+        await productDetailPage.verifyRemoveButtonIsDisplayed();
+        await productPage.openCartPage();
+        await cartPage.verifyCartPageUrl();
         await cartPage.verifyProductInCart(productName,productPrice);
     });
 
@@ -311,7 +356,7 @@ test.describe("Product Details Page Tests", () => {
         await loginPage.login(userData.username, userData.password);
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.returnToProductPage();
+        await productDetailPage.returnToProductsPage();
         await productPage.verifyProductPageUrl();
         await productPage.verifyPageTitle();
         await productPage.verifyProductList();
@@ -333,12 +378,13 @@ test.describe("Product Details Page Tests", () => {
         await productPage.openProductDetails(productName);
         await productDetailPage.addProductToCartFromDetailsPage();
         await productPage.verifyCartItemCount(1);
-        await productDetailPage.returnToProductPage();
+        await productDetailPage.returnToProductsPage();
         await productPage.verifyProductPageUrl();
+        await productPage.verifyPageTitle();
         await productPage.verifyCartItemCount(1);
-        await productPage.OpenCartPage();
+        await productPage.openCartPage();
         await cartPage.verifyCartPageUrl();
-        await cartPage.verifyProductInCart(productName,productPrice);
+        await cartPage.verifyProductInCart(productName, productPrice);
 
     });
 

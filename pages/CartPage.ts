@@ -33,8 +33,6 @@ export class CartPage {
         const specificCartItem = this.cartItems.filter({ hasText: productName });
 
         const specificCartItemName = specificCartItem.getByTestId('inventory-item-name');
-        console.log("Cart item count:", await specificCartItem.count());
-        console.log("Cart item name count:", await specificCartItemName.count());
         await expect(specificCartItemName).toHaveText(productName);
 
 

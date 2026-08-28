@@ -31,7 +31,8 @@ export class ProductPage {
     }
 
     async verifyPageTitle() {
-        await expect(this.pageTitle).toBeVisible();
+        // await expect(this.pageTitle).toBeVisible();
+        await expect(this.pageTitle).toHaveText('Products');
     }
 
     async verifyProductList() {
@@ -42,22 +43,13 @@ export class ProductPage {
         await expect(this.page).toHaveURL('/inventory.html')
     }
 
-    async OpenCartPage(){
+    async openCartPage(){
         await this.shoppingCartButton.click();
     }
 
     async addProductToCart(productName: string) {
         const specificProduct = this.specificProduct.filter({ hasText: productName });
         const specificAddToCartButton = specificProduct.getByRole('button', { name: 'Add to cart' });
-        console.log(
-            "Product count:",
-            await specificProduct.count()
-        );
-
-        console.log(
-            "Add button count:",
-            await specificAddToCartButton.count()
-        );
         await specificAddToCartButton.click();
     }
 
@@ -74,7 +66,7 @@ export class ProductPage {
 
     async getAllProductPrice() {
         const allProductPrices = await this.page
-            .getByTestId('inventory_item_price')
+            .getByTestId('inventory-item-price')
             .allTextContents();
 
         const productPrices = allProductPrices.map((price) =>
@@ -117,7 +109,7 @@ export class ProductPage {
 
     async getAllProductNames() {
         const allProductNames = await this.page
-            .getByTestId('inventory_item_name')
+            .getByTestId('inventory-item-name')
             .allTextContents();
         return allProductNames;
     }
@@ -157,7 +149,7 @@ export class ProductPage {
         await specificLinkName.click();
     }
 
-    async removeButtonSpecificProduct(productName: string) {
+    async verifySpecificProductRemoveButtonDisplayed(productName: string) {
         const specificProducts = this.specificProduct.filter({ hasText: productName });
         const specificRemoveButton = specificProducts.getByRole('button', { name: 'Remove' });
         await expect(specificRemoveButton).toBeVisible();

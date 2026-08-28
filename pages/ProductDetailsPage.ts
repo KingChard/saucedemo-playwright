@@ -9,7 +9,7 @@ export class ProductDetailsPage {
     readonly removeDetailButton: Locator;
     readonly cartBadge: Locator;
     readonly cartButton: Locator;
-    readonly backToProductButton: Locator;
+    readonly backToProductsButton: Locator;
 
 
     constructor(page: Page) {
@@ -21,7 +21,7 @@ export class ProductDetailsPage {
         this.removeDetailButton = page.getByRole('button', { name: 'Remove' });
         this.cartBadge = page.getByTestId('shopping-cart-badge');
         this.cartButton = page.getByRole('link', { name: /shopping cart/i });
-        this.backToProductButton = page.getByRole('button', { name: 'Back to products'})
+        this.backToProductsButton = page.getByRole('button', { name: 'Back to products'})
     }
 
     async verifyProductDetails(productName: string, productPrice: string, productDescription: string) {
@@ -43,10 +43,10 @@ export class ProductDetailsPage {
         await expect(this.productDetailDescription).toHaveText(productDescription);
     }
 
-    async verifyProductImage(productName: string) {
-        const productDetailImage = this.page.getByAltText(productName);
-        await expect(productDetailImage).toBeVisible
-    }
+        async verifyProductImage(productName: string) {
+            const productDetailImage = this.page.getByAltText(productName);
+            await expect(productDetailImage).toBeVisible();
+        }
 
     async addProductToCartFromDetailsPage() {
         await this.addToCartDetailButton.click();
@@ -83,13 +83,13 @@ export class ProductDetailsPage {
         await expect(this.cartBadge).not.toBeVisible();
     }
 
-    async returnToProductPage() {
-        await this.backToProductButton.click();
+    async returnToProductsPage() {
+        await this.backToProductsButton.click();
     }
 
-    async verifyBackToProductButtonDisplayed(){
-        await expect(this.backToProductButton).toBeVisible();
-        await expect(this.backToProductButton).toBeEnabled();
+    async verifyBackToProductsButtonDisplayed(){
+        await expect(this.backToProductsButton).toBeVisible();
+        await expect(this.backToProductsButton).toBeEnabled();
     }
 
     async getProductDetailName(){
