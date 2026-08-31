@@ -9,16 +9,18 @@ export class CartPage {
     readonly continueShoppingButton: Locator;
     readonly checkoutButton: Locator;
     readonly removeButtons: Locator;
+    readonly cartBadge: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.cartTitle = page.getByRole('heading', { name: 'Your Cart' });
+        this.cartTitle = page.getByTestId('title');
         this.cartItems = page.getByTestId('inventory-item');
         this.cartItemNames = page.getByTestId('inventory-item-name');
         this.cartItemPrices = page.getByTestId('inventory-item-price');
         this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' });
         this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
         this.removeButtons = page.getByRole('button', { name: 'Remove' });
+        this.cartBadge = page.getByTestId('shopping-cart-badge');
     }
 
     async gotoCartPage() {
@@ -27,6 +29,21 @@ export class CartPage {
 
     async verifyCartPageUrl(){
         await expect(this.page).toHaveURL('/cart.html')
+    }
+
+    async verifyCartPageTitle(){
+        await expect(this.cartTitle).toHaveText('Your Cart');
+    }
+
+    async verifyContinueShoppingButtonIsDisplayed(){
+        await expect(this.continueShoppingButton).toBeEnabled();
+        await expect(this.continueShoppingButton).toBeVisible();
+       
+    }
+
+    async verifyCheckoutButtonIsDisplayed(){
+        await expect(this.checkoutButton).toBeEnabled();
+        await expect(this.checkoutButton).toBeVisible();
     }
 
     async verifyProductInCart(productName: string, productPrice: string) {
@@ -55,5 +72,10 @@ export class CartPage {
 
         await expect(specificCartItem).not.toBeVisible();
 
+    }
+
+    async verifyCartIsEmpty() {
+        await expect(this.cartItems).toHaveCount(0);
+        await expect(this.cartBadge).not.toBeVisible();
     }
 }

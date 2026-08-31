@@ -21,7 +21,7 @@ export class ProductDetailsPage {
         this.removeDetailButton = page.getByRole('button', { name: 'Remove' });
         this.cartBadge = page.getByTestId('shopping-cart-badge');
         this.cartButton = page.getByRole('link', { name: /shopping cart/i });
-        this.backToProductsButton = page.getByRole('button', { name: 'Back to products'})
+        this.backToProductsButton = page.getByRole('button', { name: 'Back to products' })
     }
 
     async verifyProductDetails(productName: string, productPrice: string, productDescription: string) {
@@ -43,21 +43,21 @@ export class ProductDetailsPage {
         await expect(this.productDetailDescription).toHaveText(productDescription);
     }
 
-        async verifyProductImage(productName: string) {
-            const productDetailImage = this.page.getByAltText(productName);
-            await expect(productDetailImage).toBeVisible();
-        }
+    async verifyProductImage(productName: string) {
+        const productDetailImage = this.page.getByAltText(productName);
+        await expect(productDetailImage).toBeVisible();
+    }
 
     async addProductToCartFromDetailsPage() {
         await this.addToCartDetailButton.click();
     }
 
-    async verifyAddToCartButtonIsDisplayed(){
+    async verifyAddToCartButtonIsDisplayed() {
         await expect(this.addToCartDetailButton).toBeVisible();
         await expect(this.addToCartDetailButton).toBeEnabled();
     }
 
-    async verifyAddToCartButtonIsNotDisplayed(){
+    async verifyAddToCartButtonIsNotDisplayed() {
         await expect(this.addToCartDetailButton).not.toBeVisible();
     }
 
@@ -66,7 +66,7 @@ export class ProductDetailsPage {
         await expect(this.removeDetailButton).toBeEnabled();
     }
 
-    async verifyRemoveButtonIsNotDisplayed(){
+    async verifyRemoveButtonIsNotDisplayed() {
         await expect(this.removeDetailButton).not.toBeVisible();
     }
 
@@ -87,24 +87,24 @@ export class ProductDetailsPage {
         await this.backToProductsButton.click();
     }
 
-    async verifyBackToProductsButtonDisplayed(){
+    async verifyBackToProductsButtonDisplayed() {
         await expect(this.backToProductsButton).toBeVisible();
         await expect(this.backToProductsButton).toBeEnabled();
     }
 
-    async getProductDetailName(){
+    async getProductDetailName() {
         return this.productDetailName.textContent();
     }
 
-    async getProductDetailPrice(){
+    async getProductDetailPrice() {
         return this.productDetailPrice.textContent();
     }
 
-    async getProductDetailDescription(){
+    async getProductDetailDescription() {
         return this.productDetailDescription.textContent();
     }
 
-    async verifyProductDetailMatch(productPageName: string | null, productPagePrice: string | null, productPageDesc: string|null){
+    async verifyProductDetailMatch(productPageName: string | null, productPagePrice: string | null, productPageDesc: string | null) {
         // const productDetailName = await this.getProductDetailName();
         // const productDetailPrice = await this.getProductDetailPrice();
         // const productDetailDesc = await this.getProductDetailDescription();
