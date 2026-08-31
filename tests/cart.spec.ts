@@ -26,7 +26,7 @@ test.describe("Cart Page test", () => {
         await cartPage.verifyCartPageUrl();
         await cartPage.verifyCartPageTitle();
         await cartPage.verifyCheckoutButtonIsDisplayed();
-        await cartPage.verifyContinueShoppingButtongIsDisplayed();
+        await cartPage.verifyContinueShoppingButtonIsDisplayed();
 
     }),
 
