@@ -8,9 +8,9 @@ import { products } from "../test-data/products";
 test.describe("Cart Page test", () => {
 
     // test('' , async ({ page }) => {
-        
+
     // }),
-    test('CT-001: Verify Cart Page Opens Correctly ' , async ({ page }) => {
+    test('CT-001: Verify Cart Page Opens Correctly ', async ({ page }) => {
         const loginPage = new LoginPage(page);
         const productPage = new ProductPage(page);
         const cartPage = new CartPage(page);
@@ -30,101 +30,340 @@ test.describe("Cart Page test", () => {
 
     }),
 
-    test('CT-002: Verify Empty Cart ' , async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const userData = users.validUser;
+        test('CT-002: Verify Empty Cart ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
 
-        await productPage.gotoProductPage();
-        await productPage.openCartPage();
-        
-        await cartPage.verifyCartPageUrl();
-        await cartPage.verifyCartPageTitle();
-        
-        await cartPage.verifyCartIsEmpty();
-        await cartPage.verifyContinueShoppingButtonIsDisplayed();
-        await cartPage.verifyCheckoutButtonIsDisplayed();
-        
+            await productPage.gotoProductPage();
+            await productPage.openCartPage();
 
+            await cartPage.verifyCartPageUrl();
+            await cartPage.verifyCartPageTitle();
 
-    }),
+            await cartPage.verifyCartIsEmpty();
+            await cartPage.verifyContinueShoppingButtonIsDisplayed();
+            await cartPage.verifyCheckoutButtonIsDisplayed();
 
-    test('CT-003: Verify Cart Page Controls ' , async ({ page }) => {
-        
-    }),
+        }),
 
+        test('CT-003: Verify Cart Page Buttons', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
 
-    test('CT-004: Verify Single Product in Cart ' , async ({ page }) => {
-        
-    }),
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
 
-    test('CT-005: Verify Product Description in Cart ' , async ({ page }) => {
-        
-    }),
+            await productPage.gotoProductPage();
+            await productPage.openCartPage();
 
-    test('CT-006: Verify Cart Badge Matches Cart Items ' , async ({ page }) => {
-        
-    }),
-
-    test('CT-007: Add Two Products and Verify Both in Cart ' , async ({ page }) => {
-        
-    }),
-
-    test('CT-008: Verify Quantity for Multiple Products ' , async ({ page }) => {
-        
-    }),
-
-    test('CT-009: Remove Single Product from Cart ' , async ({ page }) => {
-        
-    }),
-
-    test('CT-010: Remove One Product from Multiple Cart Items ' , async ({ page }) => {
-        
-    }),
-
-    test('CT-011: Remove All Products from Cart ' , async ({ page }) => {
-        
-    }),
-
-    test('CT-012: Verify Remove Button Belongs to Correct Product ' , async ({ page }) => {
-        
-    }),
+            await cartPage.verifyContinueShoppingButtonIsDisplayed();
+            await cartPage.verifyCheckoutButtonIsDisplayed();
+        }),
 
 
-    test('CT-013: Continue Shopping from Empty Cart ' , async ({ page }) => {
-        
-    }),
+        test('CT-004: Verify Single Product in Cart ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productPriceBackpack = products.backpack.price;
+            const productDescriptionBackpack = products.backpack.description;
 
-    test('CT-014: Continue Shopping with Product in Cart ' , async ({ page }) => {
-        
-    }),
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
 
-    test('CT-015: Add Another Product After Continue Shopping ' , async ({ page }) => {
-        
-    }),
+            await productPage.gotoProductPage();
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.verifyCartItemCount(1);
+            await productPage.openCartPage();
 
-    test('CT-016: Verify Product Name Link from Cart ' , async ({ page }) => {
-        
-    }),
+            await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescriptionBackpack);
+            await cartPage.verifyCartItemCount(1);
+            await cartPage.verifySpecificProductRemoveButtonIsDisplayed(productNameBackpack);
+        }),
 
-    test('CT-017: Verify Cart Data Matches Product Listing ' , async ({ page }) => {
-        
-    }),
+        test('CT-005: Verify Product Description in Cart ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productPriceBackpack = products.backpack.price;
+            const productDescriptionBackpack = products.backpack.description;
 
-    test('CT-018: Verify Cart State After Visiting Product Details ' , async ({ page }) => {
-        
-    }),
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
 
-    test('CT-019: Verify Checkout Button Navigation ' , async ({ page }) => {
-        
-    }),
-    
-    test('CT-020: Verify Product Remains in Cart Before Checkout ' , async ({ page }) => {
-        
-    });
+            await productPage.gotoProductPage();
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.openCartPage();
+
+            await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescriptionBackpack);
+        }),
+
+        test('CT-006: Verify Cart Badge Matches Cart Items ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productPriceBackpack = products.backpack.price;
+            const productDescriptionBackpack = products.backpack.description;
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.gotoProductPage();
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.verifyCartItemCount(1);
+            await productPage.openCartPage();
+
+            const cartItemCount = await cartPage.countCartItems();
+            await cartPage.verifyCartItemCount(cartItemCount);
+            await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescriptionBackpack);
+
+        }),
+
+        test('CT-007: Add Two Products and Verify Both in Cart ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productPriceBackpack = products.backpack.price;
+            const productDescriptionBackpack = products.backpack.description;
+            const productNameBikelight = products.bikelight.name;
+            const productPriceBikelight = products.bikelight.price;
+            const productDescriptionBikelight = products.bikelight.description;
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.gotoProductPage();
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.addProductToCart(productNameBikelight);
+            await productPage.verifyCartItemCount(2);
+            await productPage.openCartPage();
+
+            await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescriptionBackpack);
+            await cartPage.verifyProductInCart(productNameBikelight, productPriceBikelight, productDescriptionBikelight);
+            const cartItemCount = await cartPage.countCartItems();
+            await cartPage.verifyCartItemCount(cartItemCount);
+        }),
+
+        test('CT-008: Verify Quantity for Multiple Products ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productNameBikelight = products.bikelight.name;
+
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.gotoProductPage();
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.addProductToCart(productNameBikelight);
+            await productPage.openCartPage();
+
+            const backpackCount = await cartPage.countSpecificItemOnCart(productNameBackpack);
+            const bikelightCount = await cartPage.countSpecificItemOnCart(productNameBikelight);
+            await cartPage.verifySpecificItemCount(productNameBackpack, backpackCount);
+            await cartPage.verifySpecificItemCount(productNameBikelight, bikelightCount);
+            const cartItemCount = await cartPage.countCartItems();
+            await cartPage.verifyCartItemCount(cartItemCount);
+        }),
+
+        test('CT-009: Remove Single Product from Cart ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.gotoProductPage();
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.openCartPage();
+            await cartPage.removeProductFromCart(productNameBackpack);
+            await cartPage.verifyProductIsRemoved(productNameBackpack);
+            await cartPage.verifyCartIsEmpty();
+            await cartPage.verifyCartBadgeIsNotVisible();
+            await cartPage.verifyCartPageUrl();
+        }),
+
+        test('CT-010: Remove One Product from Multiple Cart Items ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productNameBikelight = products.bikelight.name;
+            const productPriceBikelight = products.bikelight.price;
+            const productDescBikelight = products.bikelight.description;
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.addProductToCart(productNameBikelight);
+            await productPage.verifyCartItemCount(2);
+            await productPage.openCartPage();
+
+            await cartPage.removeProductFromCart(productNameBackpack);
+            await cartPage.verifyProductInCart(productNameBikelight, productPriceBikelight, productDescBikelight);
+            await cartPage.verifyCartItemCount(1);
+        }),
+
+        test('CT-011: Remove All Products from Cart ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productNameBikelight = products.bikelight.name;
+
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.addProductToCart(productNameBikelight);
+            await productPage.openCartPage();
+
+            await cartPage.removeProductFromCart(productNameBackpack);
+            await cartPage.removeProductFromCart(productNameBikelight);
+            await cartPage.verifyCartIsEmpty();
+            await cartPage.verifyCartBadgeIsNotVisible();
+            await cartPage.verifyCartPageUrl();
+        }),
+
+        test('CT-012: Verify Remove Button Belongs to Correct Product ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productPriceBackpack = products.backpack.price;
+            const productDescBackpack = products.backpack.description;
+            const productNameBikelight = products.bikelight.name;
+
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.addProductToCart(productNameBikelight);
+            await productPage.openCartPage();
+
+            await cartPage.removeProductFromCart(productNameBikelight);
+            await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescBackpack);
+            const cartItemCount = await cartPage.countCartItems();
+            await cartPage.verifyCartItemCount(cartItemCount);
+        }),
+
+
+        test('CT-013: Continue Shopping from Empty Cart ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.gotoProductPage();
+            await productPage.openCartPage();
+
+            await cartPage.continueShopping();
+
+            await productPage.verifyProductPageUrl();
+            await productPage.verifyPageTitle();
+            await productPage.verifyProductList();
+        }),
+
+        test('CT-014: Continue Shopping with Product in Cart ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productPriceBackpack = products.backpack.price;
+            const productDescriptionBackpack = products.backpack.description;
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.gotoProductPage();
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.openCartPage();
+
+            await cartPage.continueShopping();
+            await productPage.verifyProductPageUrl();
+            await productPage.verifyCartItemCount(1);
+            await productPage.openCartPage();
+            await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescriptionBackpack);
+        }),
+
+        test('CT-015: Add Another Product After Continue Shopping ', async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const userData = users.validUser;
+            const productNameBackpack = products.backpack.name;
+            const productPriceBackpack = products.backpack.price;
+            const productDescriptionBackpack = products.backpack.description;
+            const productNameBikelight = products.bikelight.name;
+            const productPriceBikelight = products.bikelight.price;
+            const productDescriptionBikelight = products.bikelight.description;
+
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
+
+            await productPage.gotoProductPage();
+            await productPage.addProductToCart(productNameBackpack);
+            await productPage.openCartPage();
+
+            await cartPage.continueShopping();
+            await productPage.verifyProductPageUrl();
+            await productPage.verifyCartItemCount(1);
+            await productPage.addProductToCart(productNameBikelight);
+            await productPage.verifyCartItemCount(2);
+            await productPage.openCartPage();
+            await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescriptionBackpack);
+            await cartPage.verifyProductInCart(productNameBikelight, productPriceBikelight, productDescriptionBikelight);
+        }),
+
+        test('CT-016: Verify Product Name Link from Cart ', async ({ page }) => {
+
+        }),
+
+        test('CT-017: Verify Cart Data Matches Product Listing ', async ({ page }) => {
+
+        }),
+
+        test('CT-018: Verify Cart State After Visiting Product Details ', async ({ page }) => {
+
+        }),
+
+        test('CT-019: Verify Checkout Button Navigation ', async ({ page }) => {
+
+        }),
+
+        test('CT-020: Verify Product Remains in Cart Before Checkout ', async ({ page }) => {
+
+        });
 
 });

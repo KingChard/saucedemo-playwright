@@ -13,6 +13,7 @@ test.describe("Product Page Tests", () => {
         const userData = users.validUser;
         const productName = products.backpack.name;
         const productPrice = products.backpack.price;
+        const productDescription = products.backpack.description;
 
         //Login valid credentials
         await loginPage.gotoLoginPage();
@@ -27,7 +28,7 @@ test.describe("Product Page Tests", () => {
         await productPage.verifyCartItemCount(1); // Verify that the cart badge shows 1 item
 
         await cartPage.gotoCartPage();
-        await cartPage.verifyProductInCart(productName, productPrice); // Verify that the product is in the cart with the correct name and price
+        await cartPage.verifyProductInCart(productName, productPrice, productDescription); // Verify that the product is in the cart with the correct name and price
 
     });
 
@@ -41,8 +42,8 @@ test.describe("Product Page Tests", () => {
         const productPriceBackpack = products.backpack.price;
         const productNameBikelight = products.bikelight.name;
         const productPriceBikelight = products.bikelight.price;
-
-
+        const productDescriptionBackpack = products.backpack.description;
+        const productDescriptionBikelight = products.bikelight.description;
 
         await loginPage.gotoLoginPage();
         await loginPage.login(userData.username, userData.password);
@@ -57,7 +58,7 @@ test.describe("Product Page Tests", () => {
         await cartPage.removeProductFromCart(productNameBackpack);
         await cartPage.verifyProductIsRemoved(productNameBackpack);
 
-        await cartPage.verifyProductInCart(productNameBikelight, productPriceBikelight);
+        await cartPage.verifyProductInCart(productNameBikelight, productPriceBikelight, productDescriptionBikelight);
 
         await productPage.gotoProductPage();
         await productPage.verifyCartItemCount(1);
