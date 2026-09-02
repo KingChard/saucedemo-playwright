@@ -1,6 +1,6 @@
 import { Locator, Page, expect } from "@playwright/test";
 
-export class CartPage {
+export class CheckoutPage {
     readonly page: Page;
 
     constructor(page: Page) {
@@ -9,5 +9,9 @@ export class CartPage {
 
     async gotoCheckoutPage(){
         await this.page.goto('/checkout-step-one.html');
+    }
+
+    async verifyCheckoutPageUrl() {
+        await expect(this.page).toHaveURL('/checkout-step-one.html');
     }
 }

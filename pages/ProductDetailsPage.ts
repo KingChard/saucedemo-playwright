@@ -105,10 +105,6 @@ export class ProductDetailsPage {
     }
 
     async verifyProductDetailMatch(productPageName: string | null, productPagePrice: string | null, productPageDesc: string | null) {
-        // const productDetailName = await this.getProductDetailName();
-        // const productDetailPrice = await this.getProductDetailPrice();
-        // const productDetailDesc = await this.getProductDetailDescription();
-
         await expect(await this.getProductDetailName()).toBe(productPageName);
         await expect(await this.getProductDetailPrice()).toBe(productPagePrice);
         await expect(await this.getProductDetailDescription()).toBe(productPageDesc);

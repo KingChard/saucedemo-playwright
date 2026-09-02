@@ -122,4 +122,15 @@ export class CartPage {
         await this.continueShoppingButton.click();
     }
 
+    async openItemDetailsFromCart(productName: string) {
+        const specificCartItem = this.cartItems.filter({ hasText: productName });
+        const specificCartItemName = specificCartItem.getByTestId('inventory-item-name');
+        await specificCartItemName.click();
+    }
+
+    async checkoutItemFromCart() {
+        await this.checkoutButton.click();
+    }
+    
+
 }
