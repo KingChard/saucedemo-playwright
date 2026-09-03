@@ -96,8 +96,7 @@ test.describe("Product Details Page Tests", () => {
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.addProductToCartFromDetailsPage();
-        await productPage.verifyCartItemCount(1);
-        await cartPage.gotoCartPage();
+        await productPage.verifyProductCartBadge(1);
         await cartPage.verifyProductInCart(productName, productPrice, productDescription); // Verify that the product is in the cart with the correct name and price
     });
 
@@ -148,8 +147,7 @@ test.describe("Product Details Page Tests", () => {
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.addProductToCartFromDetailsPage();
-        await productPage.verifyCartItemCount(1);
-        await cartPage.gotoCartPage();
+        await productPage.verifyProductCartBadge(1);
         await cartPage.verifyProductInCart(productName, productPrice, productDescription);
     });
 
@@ -210,7 +208,7 @@ test.describe("Product Details Page Tests", () => {
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailPage.addProductToCartFromDetailsPage();
-        await productPage.verifyCartItemCount(1);
+        await productPage.verifyProductCartBadge(1);
         await productDetailPage.verifyAddToCartButtonIsNotDisplayed();
         await productDetailPage.verifyRemoveButtonIsDisplayed();
     });
@@ -280,7 +278,7 @@ test.describe("Product Details Page Tests", () => {
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailPage.addProductToCartFromDetailsPage();
-        await productPage.verifyCartItemCount(1);
+        await productPage.verifyProductCartBadge(1);
         await productDetailPage.verifyRemoveButtonIsDisplayed();
         await productPage.openCartPage();
         await cartPage.verifyCartPageUrl();
@@ -302,7 +300,7 @@ test.describe("Product Details Page Tests", () => {
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailPage.addProductToCartFromDetailsPage();
-        await productPage.verifyCartItemCount(1);
+        await productPage.verifyProductCartBadge(1);
         await productDetailPage.verifyRemoveButtonIsDisplayed();
         await productPage.openCartPage();
         await cartPage.verifyCartPageUrl();
@@ -324,7 +322,7 @@ test.describe("Product Details Page Tests", () => {
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailPage.addProductToCartFromDetailsPage();
-        await productPage.verifyCartItemCount(1);
+        await productPage.verifyProductCartBadge(1);
         await productDetailPage.verifyRemoveButtonIsDisplayed();
         await productPage.openCartPage();
         await cartPage.verifyCartPageUrl();
@@ -383,11 +381,11 @@ test.describe("Product Details Page Tests", () => {
         await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailPage.addProductToCartFromDetailsPage();
-        await productPage.verifyCartItemCount(1);
+        await productPage.verifyProductCartBadge(1);
         await productDetailPage.returnToProductsPage();
         await productPage.verifyProductPageUrl();
         await productPage.verifyPageTitle();
-        await productPage.verifyCartItemCount(1);
+        await productPage.verifyProductCartBadge(1);
         await productPage.openCartPage();
         await cartPage.verifyCartPageUrl();
         await cartPage.verifyProductInCart(productName, productPrice, productDescription);

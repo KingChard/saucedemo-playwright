@@ -4,13 +4,8 @@ export class CartPage {
     readonly page: Page;
     readonly cartTitle: Locator;
     readonly cartItems: Locator;
-    readonly cartItemQuantity: Locator;
-    readonly cartItemNames: Locator;
-    readonly cartItemPrices: Locator;
-    readonly cartItemDescriptions: Locator;
     readonly continueShoppingButton: Locator;
     readonly checkoutButton: Locator;
-    readonly removeButtons: Locator;
     readonly cartBadge: Locator;
 
 
@@ -18,18 +13,9 @@ export class CartPage {
         this.page = page;
         this.cartTitle = page.getByTestId('title');
         this.cartItems = page.getByTestId('inventory-item');
-        this.cartItemQuantity = page.getByTestId('item-quantity');
-        this.cartItemNames = page.getByTestId('inventory-item-name');
-        this.cartItemPrices = page.getByTestId('inventory-item-price');
-        this.cartItemDescriptions = page.getByTestId('inventory-item-desc');
         this.continueShoppingButton = page.getByTestId('continue-shopping');
         this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
-        this.removeButtons = page.getByRole('button', { name: 'Remove' });
         this.cartBadge = page.getByTestId('shopping-cart-badge');
-    }
-
-    async gotoCartPage() {
-        await this.page.goto('/cart.html');
     }
 
     async verifyCartPageUrl() {
@@ -96,25 +82,6 @@ export class CartPage {
         const specificCartItem = this.cartItems.filter({ hasText: productName });
         const specificCartRemoveButton = specificCartItem.getByRole('button', { name: 'Remove' });
         await expect(specificCartRemoveButton).toBeVisible();
-    }
-
-    async countCartItems() {
-        const cartItemCount = await this.cartItems.count();
-        return cartItemCount;
-    }
-
-    async countSpecificItemOnCart(productName: string) {
-        const specificCartItem = this.cartItems.filter({ hasText: productName });
-        const specificCartItemCount = await specificCartItem.count();
-        return specificCartItemCount;
-    }
-
-    async verifySpecificItemCount(productName: string, productCount: number) {
-        const specificCartItem = this.cartItems.filter({ hasText: productName });
-        const itemQuantity = await specificCartItem.count();
-
-        await expect(itemQuantity).toEqual(productCount);
-
     }
 
     async verifyCartBadgeIsNotVisible() {

@@ -25,9 +25,8 @@ test.describe("Product Page Tests", () => {
 
         //Add specific product to cart
         await productPage.addProductToCart(productName);
-        await productPage.verifyCartItemCount(1); // Verify that the cart badge shows 1 item
+        await productPage.verifyProductCartBadge(1); // Verify that the cart badge shows 1 item
 
-        await cartPage.gotoCartPage();
         await cartPage.verifyProductInCart(productName, productPrice, productDescription); // Verify that the product is in the cart with the correct name and price
 
     });
@@ -47,21 +46,19 @@ test.describe("Product Page Tests", () => {
 
         await loginPage.gotoLoginPage();
         await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
 
         await productPage.addProductToCart(productNameBackpack);
         await productPage.addProductToCart(productNameBikelight);
 
-        await productPage.verifyCartItemCount(2);
-        await cartPage.gotoCartPage();
-
+        await productPage.verifyProductCartBadge(2);
+        await productPage.openCartPage();
         await cartPage.removeProductFromCart(productNameBackpack);
         await cartPage.verifyProductIsRemoved(productNameBackpack);
 
         await cartPage.verifyProductInCart(productNameBikelight, productPriceBikelight, productDescriptionBikelight);
 
         await productPage.gotoProductPage();
-        await productPage.verifyCartItemCount(1);
+        await productPage.verifyProductCartBadge(1);
 
 
     })

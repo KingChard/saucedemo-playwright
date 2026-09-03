@@ -39,11 +39,11 @@ export class ProductPage {
         await expect(this.productList).toBeVisible();
     }
 
-    async verifyProductPageUrl(){
+    async verifyProductPageUrl() {
         await expect(this.page).toHaveURL('/inventory.html')
     }
 
-    async openCartPage(){
+    async openCartPage() {
         await this.shoppingCartButton.click();
     }
 
@@ -53,12 +53,12 @@ export class ProductPage {
         await specificAddToCartButton.click();
     }
 
-    async verifyCartItemCount(expectedCount: number) {
+    async verifyProductCartBadge(expectedCount: number) {
         await expect(this.shoppingCartBadge).toHaveText(expectedCount.toString());
 
     }
 
-    async verifySpecificProductDisplayed(productName: string){
+    async verifySpecificProductDisplayed(productName: string) {
         const specificProduct = this.specificProduct.filter({ hasText: productName });
         const specificProductName = specificProduct.getByTestId('inventory-item-name');
         await expect(specificProductName).toBeVisible();
@@ -170,7 +170,7 @@ export class ProductPage {
         return await productPriceElement.textContent();
     }
 
-    async getProductDescription(productName: string){
+    async getProductDescription(productName: string) {
         const specificProduct = this.specificProduct.filter({ hasText: productName });
         const productDescElement = specificProduct.getByTestId('inventory-item-desc')
 
