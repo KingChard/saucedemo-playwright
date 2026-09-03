@@ -4,6 +4,7 @@ export class CartPage {
     readonly page: Page;
     readonly cartTitle: Locator;
     readonly cartItems: Locator;
+    readonly cartItemQuantity: Locator;
     readonly cartItemNames: Locator;
     readonly cartItemPrices: Locator;
     readonly cartItemDescriptions: Locator;
@@ -17,6 +18,7 @@ export class CartPage {
         this.page = page;
         this.cartTitle = page.getByTestId('title');
         this.cartItems = page.getByTestId('inventory-item');
+        this.cartItemQuantity = page.getByTestId('item-quantity');
         this.cartItemNames = page.getByTestId('inventory-item-name');
         this.cartItemPrices = page.getByTestId('inventory-item-price');
         this.cartItemDescriptions = page.getByTestId('inventory-item-desc');
@@ -85,8 +87,9 @@ export class CartPage {
         await expect(this.cartBadge).not.toBeVisible();
     }
 
-    async verifyCartItemCount(expectedCount: number) {
+    async verifyCartBadgeCount(expectedCount: number) {
         await expect(this.cartBadge).toHaveText(expectedCount.toString());
+
     }
 
     async verifySpecificProductRemoveButtonIsDisplayed(productName: string) {
@@ -128,9 +131,18 @@ export class CartPage {
         await specificCartItemName.click();
     }
 
-    async checkoutItemFromCart() {
+    async proceedToCheckout() {
         await this.checkoutButton.click();
     }
-    
+
+    async verifyProductQuantity(productName: string, expectedQuantity: number) {
+        const specificCartItem = this.cartItems.filter({ hasText: productName });
+        const itemQuantity = specificCartItem.getByTestId('item-quantity');
+
+        await expect(itemQuantity).toHaveText(expectedQuantity.toString());
+    }
+    async verifyCartItemCount(expectedCount: number) {
+        await expect(this.cartItems).toHaveCount(expectedCount);
+    }
 
 }
