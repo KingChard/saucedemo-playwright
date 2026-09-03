@@ -26,7 +26,10 @@ test.describe("Product Page Tests", () => {
         //Add specific product to cart
         await productPage.addProductToCart(productName);
         await productPage.verifyProductCartBadge(1); // Verify that the cart badge shows 1 item
+        await productPage.openCartPage();
 
+        await cartPage.verifyCartPageUrl(); // Verify that the cart page URL is correct
+        await cartPage.verifyCartPageTitle();
         await cartPage.verifyProductInCart(productName, productPrice, productDescription); // Verify that the product is in the cart with the correct name and price
 
     });

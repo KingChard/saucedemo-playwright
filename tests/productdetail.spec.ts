@@ -97,6 +97,10 @@ test.describe("Product Details Page Tests", () => {
         await productPage.openProductDetails(productName);
         await productDetailsPage.addProductToCartFromDetailsPage();
         await productPage.verifyProductCartBadge(1);
+        await productPage.openCartPage();
+
+        await cartPage.verifyCartPageUrl(); // Verify that the cart page URL is correct
+        await cartPage.verifyCartPageTitle();
         await cartPage.verifyProductInCart(productName, productPrice, productDescription); // Verify that the product is in the cart with the correct name and price
     });
 
@@ -148,6 +152,9 @@ test.describe("Product Details Page Tests", () => {
         await productPage.openProductDetails(productName);
         await productDetailsPage.addProductToCartFromDetailsPage();
         await productPage.verifyProductCartBadge(1);
+        await productPage.openCartPage();
+        await cartPage.verifyCartPageUrl(); // Verify that the cart page URL is correct
+        await cartPage.verifyCartPageTitle();
         await cartPage.verifyProductInCart(productName, productPrice, productDescription);
     });
 
