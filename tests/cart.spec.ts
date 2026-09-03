@@ -121,8 +121,8 @@ test.describe("Cart Page test", () => {
             await productPage.verifyCartItemCount(1);
             await productPage.openCartPage();
 
-            const cartItemCount = await cartPage.countCartItems();
-            await cartPage.verifyCartItemCount(cartItemCount);
+            await cartPage.verifyCartItemCount(1);
+            await cartPage.verifyCartBadgeCount(1);
             await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescriptionBackpack);
 
         }),
@@ -149,8 +149,8 @@ test.describe("Cart Page test", () => {
 
             await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescriptionBackpack);
             await cartPage.verifyProductInCart(productNameBikelight, productPriceBikelight, productDescriptionBikelight);
-            const cartItemCount = await cartPage.countCartItems();
-            await cartPage.verifyCartItemCount(cartItemCount);
+            await cartPage.verifyCartItemCount(2);
+            await cartPage.verifyCartBadgeCount(2);
         }),
 
         test('CT-008: Verify Quantity for Multiple Products ', async ({ page }) => {
