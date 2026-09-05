@@ -579,6 +579,12 @@ test.describe("Checkout Page Test", () => {
         const expectedItemTotal = await checkoutPage.computeItemTotal(productBackpackPrice!, productBikelightPrice!);
         await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(expectedItemTotal);
         await checkoutPage.verifyOverviewProductCount(2);
+        const itemTotalValue = await checkoutPage.getExtractedItemValue();
+        const taxValue = await checkoutPage.getExtractedTaxValue();
+        console.log(itemTotalValue + " " + taxValue);
+        
+        const computedValue = await checkoutPage.computeItemTotal(itemTotalValue!,taxValue!);
+        await checkoutPage.verifyIfCalculatedPriceTotalIsMatchToDisplayedPriceTotal(computedValue);
         await checkoutPage.finishButtonOverview();
 
         await checkoutPage.verifyCompletePageUrl();
