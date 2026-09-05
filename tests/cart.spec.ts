@@ -429,8 +429,8 @@ test.describe("Cart Page Test", () => {
 
         await cartPage.verifyProductInCart(productNameBackpack, productPriceBackpack, productDescriptionBackpack);
         await cartPage.proceedToCheckout();
-        await checkoutPage.verifyCheckoutPageUrl();
-        await checkoutPage.verifyPageTitle();
+        await checkoutPage.verifyCheckoutInformationPageUrl();
+        await checkoutPage.verifyCheckoutInformationPageTitle();
 
     });
 

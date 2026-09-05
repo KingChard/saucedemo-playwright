@@ -176,4 +176,8 @@ export class ProductPage {
 
         return await productDescElement.textContent();
     }
+
+    async verifyProductCartBadgeIsNotVisible(){
+        await expect(this.shoppingCartBadge).not.toBeVisible();
+    }
 }

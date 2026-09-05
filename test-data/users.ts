@@ -5,3 +5,7 @@ export const users = {
     emptyUsername: { username: "", password: "secret_sauce", expectedErrorMessage: "Epic sadface: Username is required" },
     emptyPassword: { username: "standard_user", password: "", expectedErrorMessage: "Epic sadface: Password is required" },
 }
+
+export const usersWithCheckoutInfo = {
+    user1: { firstname: "Xavier Axcel", lastname: "Sasis", postalCode: 1440 }
+}
