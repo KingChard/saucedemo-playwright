@@ -25,9 +25,9 @@ test.describe("Checkout Page Test", () => {
 
         await checkoutPage.verifyCheckoutInformationPageUrl();
         await checkoutPage.verifyCheckoutInformationPageTitle();
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
-        await checkoutPage.informationCancelButtonIsDisplayed();
-        await checkoutPage.continueButtonIsDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyInformationCancelButtonIsDisplayed();
+        await checkoutPage.verifyContinueButtonIsDisplayed();
     });
 
     test('CHK-002: Verify Checkout Information Form Controls', async ({ page }) => {
@@ -46,9 +46,9 @@ test.describe("Checkout Page Test", () => {
 
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
-        await checkoutPage.informationCancelButtonIsDisplayed();
-        await checkoutPage.continueButtonIsDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyInformationCancelButtonIsDisplayed();
+        await checkoutPage.verifyContinueButtonIsDisplayed();
     });
 
     test('CHK-003: Continue with Valid Checkout Information', async ({ page }) => {
@@ -69,7 +69,7 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
         await checkoutPage.verifyCheckoutOverviewPageUrl();
         await checkoutPage.verifyCheckoutOverviewPageTitle();
@@ -93,7 +93,9 @@ test.describe("Checkout Page Test", () => {
 		await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
 		await cartPage.proceedToCheckout();
 		
-		await checkoutPage.errorMessageForFirstNameIsDisplayed(userInfo.lastname, userInfo.postalCode);
+		await checkoutPage.fillOutCheckoutForm("", userInfo.lastname, userInfo.postalCode);
+        await checkoutPage.clickContiueButton();
+        await checkoutPage.verifyErrorValidationMessage('Error: First Name is required');
 		await checkoutPage.verifyCheckoutInformationPageUrl();
     });
 
@@ -115,7 +117,9 @@ test.describe("Checkout Page Test", () => {
 		await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
 		await cartPage.proceedToCheckout();
 		
-		await checkoutPage.errorMessageForLastNameIsDisplayed(userInfo.firstname, userInfo.postalCode);
+		await checkoutPage.fillOutCheckoutForm(userInfo.firstname, "", userInfo.postalCode);
+        await checkoutPage.clickContiueButton();
+        await checkoutPage.verifyErrorValidationMessage('Error: Last Name is required');
 		await checkoutPage.verifyCheckoutInformationPageUrl();
     });
 
@@ -137,7 +141,9 @@ test.describe("Checkout Page Test", () => {
 		await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
 		await cartPage.proceedToCheckout();
 		
-		await checkoutPage.errorMessageForPostalCodeIsDisplayed(userInfo.firstname, userInfo.lastname);
+		await checkoutPage.fillOutCheckoutForm(userInfo.firstname, userInfo.lastname, "");
+        await checkoutPage.clickContiueButton();
+        await checkoutPage.verifyErrorValidationMessage('Error: Postal Code is required');
 		await checkoutPage.verifyCheckoutInformationPageUrl();
     });
 
@@ -213,17 +219,17 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
         await checkoutPage.verifyCheckoutOverviewPageUrl();
         await checkoutPage.verifyCheckoutOverviewPageTitle();
-        await checkoutPage.productSectionIsDisplayed();
-        await checkoutPage.paymentSectionIsDisplayed();
-        await checkoutPage.shippingSectionIsDisplayed();
-        await checkoutPage.priceTotalSectionIsDisplayed();
-        await checkoutPage.overviewCancelButtonIsDisplayed();
-        await checkoutPage.finishButtonIsDisplayed();
+        await checkoutPage.verifyProductSectionIsDisplayed();
+        await checkoutPage.verifyPaymentSectionIsDisplayed();
+        await checkoutPage.verifyShippingSectionIsDisplayed();
+        await checkoutPage.verifyPriceTotalSectionIsDisplayed();
+        await checkoutPage.verifyOverviewCancelButtonIsDisplayed();
+        await checkoutPage.verifyFinishButtonIsDisplayed();
     });
 
     test('CHK-010: Verify Product Data on Checkout Overview', async ({ page }) => {
@@ -244,7 +250,7 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
         await checkoutPage.verifyCheckoutOverviewPageUrl();
@@ -273,7 +279,7 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
         await checkoutPage.verifyCheckoutOverviewPageUrl();
@@ -301,7 +307,7 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
 
@@ -331,7 +337,7 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBackpack.name, productDataBackpack.description, productDataBackpack.price);
@@ -367,7 +373,7 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
         const expectedItemTotal = await checkoutPage.computeItemTotal(productBackpackPrice!, productBikelightPrice!);
         console.log(expectedItemTotal);
@@ -397,11 +403,11 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
         await checkoutPage.verifyCheckoutOverviewPageUrl();
-        await checkoutPage.priceTotalSectionIsDisplayed();
+        await checkoutPage.verifyPriceTotalSectionIsDisplayed();
         const itemTotalValue = await checkoutPage.getExtractedItemValue();
         const taxValue = await checkoutPage.getExtractedTaxValue();
         console.log(itemTotalValue + " " + taxValue);
@@ -432,11 +438,11 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
         await checkoutPage.verifyCheckoutOverviewPageUrl();
-        await checkoutPage.cancelButtonOverview();
+        await checkoutPage.cancelCheckoutOverview();
 
         await productPage.verifyProductPageUrl();
         await productPage.verifyPageTitle();
@@ -466,11 +472,11 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
         await checkoutPage.verifyCheckoutOverviewPageUrl();
-        await checkoutPage.finishButtonOverview();
+        await checkoutPage.finishCheckout();
 
         await checkoutPage.verifyCompletePageUrl();
         await checkoutPage.verifyCompletePageTitle();
@@ -495,16 +501,16 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
         await checkoutPage.verifyCheckoutOverviewPageUrl();
-        await checkoutPage.finishButtonOverview();
+        await checkoutPage.finishCheckout();
 
         await checkoutPage.verifyCompletePageUrl();
         await checkoutPage.verifyCompletePageTitle();
         await checkoutPage.verifyCompleteConfirmationMessage();
-        await checkoutPage.completeBackButtonIsDisplayed();
+        await checkoutPage.verifyCompleteBackButtonIsDisplayed();
     });
 
     test('CHK-019: Return Home After Completed Checkout', async ({ page }) => {
@@ -526,15 +532,15 @@ test.describe("Checkout Page Test", () => {
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
 
-        await checkoutPage.checkoutFormFieldsAreDisplayed();
+        await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
 
         await checkoutPage.verifyCheckoutOverviewPageUrl();
-        await checkoutPage.finishButtonOverview();
+        await checkoutPage.finishCheckout();
 
         await checkoutPage.verifyCompletePageUrl();
         await checkoutPage.verifyCompletePageTitle();
-        await checkoutPage.completeBackButtonIsClick();
+        await checkoutPage.clickBackHome();
 
         await productPage.verifyProductPageUrl();
         await productPage.verifyPageTitle();
@@ -585,7 +591,7 @@ test.describe("Checkout Page Test", () => {
         
         const computedValue = await checkoutPage.computeItemTotal(itemTotalValue!,taxValue!);
         await checkoutPage.verifyIfCalculatedPriceTotalIsMatchToDisplayedPriceTotal(computedValue);
-        await checkoutPage.finishButtonOverview();
+        await checkoutPage.finishCheckout();
 
         await checkoutPage.verifyCompletePageUrl();
         await checkoutPage.verifyCompletePageTitle();

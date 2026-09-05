@@ -8,9 +8,7 @@ export class CheckoutPage {
     readonly postalCodeInput: Locator;
     readonly continueButton: Locator
     readonly informationCancelButton: Locator;
-    readonly errorMessageFirstName: Locator;
-    readonly errorMessageLastName: Locator;
-    readonly errorMessagePostalCode: Locator;
+    readonly errorMessage: Locator;
     
     readonly overviewPageTitle: Locator;
     readonly overviewProductList: Locator;
@@ -33,7 +31,6 @@ export class CheckoutPage {
     readonly completeHeading: Locator;
     readonly completeMessage: Locator;
     readonly completeBackButton: Locator;
-    readonly completedGeneratePdfButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -43,9 +40,7 @@ export class CheckoutPage {
         this.postalCodeInput = page.getByPlaceholder('Zip/Postal Code');
         this.continueButton = page.getByRole('button', { name: 'Continue' });
         this.informationCancelButton = page.getByRole('button', { name: 'Cancel' });
-        this.errorMessageFirstName = page.getByText('Error: First Name is required');
-        this.errorMessageLastName = page.getByText('Error: Last Name is required');
-        this.errorMessagePostalCode = page.getByText('Error: Postal Code is required');
+        this.errorMessage = page.getByTestId('error');
 
         this.overviewPageTitle = page.getByTestId('title');
         this.overviewProductList = page.getByTestId('inventory-item');
@@ -68,11 +63,6 @@ export class CheckoutPage {
         this.completeHeading = page.getByTestId('complete-header');
         this.completeMessage = page.getByTestId('complete-text');
         this.completeBackButton = page.getByRole('button', {name: 'Back Home'});
-        this.completedGeneratePdfButton = page.getByRole('button', {name: 'Generate PDF Order'});
-    }
-
-    async gotoCheckoutInformationPage(){
-        await this.page.goto('/checkout-step-one.html');
     }
 
     async verifyCheckoutInformationPageUrl() {
@@ -83,7 +73,7 @@ export class CheckoutPage {
         await expect(this.informationPageTitle).toHaveText('Checkout: Your Information');
     }
 
-    async checkoutFormFieldsAreDisplayed() {
+    async verifyCheckoutFormFieldsAreDisplayed() {
         await expect(this.firstNameInput).toBeVisible();
         await expect(this.firstNameInput).toBeEditable();
 
@@ -94,20 +84,20 @@ export class CheckoutPage {
         await expect(this.postalCodeInput).toBeEditable();
     }
 
-    async informationCancelButtonIsDisplayed() {
+    async verifyInformationCancelButtonIsDisplayed() {
         await expect(this.informationCancelButton).toBeVisible();
         await expect(this.informationCancelButton).toBeEnabled();
     }
 
-    async continueButtonIsDisplayed() {
+    async verifyContinueButtonIsDisplayed() {
         await expect(this.continueButton).toBeVisible();
         await expect(this.continueButton).toBeEnabled();
     }
 
-    async fillOutCheckoutFormAndContinue(firstname: string, lastname: string, postalCode: number){
+    async fillOutCheckoutFormAndContinue(firstname: string, lastname: string, postalCode: string){
         await this.firstNameInput.fill(firstname);
         await this.lastNameInput.fill(lastname);
-        await this.postalCodeInput.fill(postalCode.toString());
+        await this.postalCodeInput.fill(postalCode);
         await this.continueButton.click();
     }
     async verifyCheckoutOverviewPageUrl() {
@@ -118,49 +108,28 @@ export class CheckoutPage {
         await expect(this.overviewPageTitle).toHaveText('Checkout: Overview');
     }
 
-    async errorMessageForFirstNameIsDisplayed(lastname: string, postalCode: number) {
-        await this.lastNameInput.fill(lastname);
-        await this.postalCodeInput.fill(postalCode.toString());
-        await this.continueButton.click();
-        await expect(this.errorMessageFirstName).toBeVisible();
-    }
-
-    async errorMessageForLastNameIsDisplayed(firstname: string, postalCode: number) {
-        await this.firstNameInput.fill(firstname);
-        await this.postalCodeInput.fill(postalCode.toString());
-        await this.continueButton.click();
-        await expect(this.errorMessageLastName).toBeVisible();
-    }
-
-    async errorMessageForPostalCodeIsDisplayed(firstname: string, lastname: string) {
-        await this.firstNameInput.fill(firstname);
-        await this.lastNameInput.fill(lastname);
-        await this.continueButton.click();
-        await expect(this.errorMessagePostalCode).toBeVisible();
-    }
-
     async cancelCheckoutInformation() {
         await this.informationCancelButton.click();
     }
 
-    async productSectionIsDisplayed(){
+    async verifyProductSectionIsDisplayed(){
         await expect(this.overviewProductName).toBeVisible();
         await expect(this.overviewProductDesc).toBeVisible;
         await expect(this.overviewProductPrice).toBeVisible();
         await expect(this.overviewProductQuantity).toBeVisible();
     }
 
-    async paymentSectionIsDisplayed(){
+    async verifyPaymentSectionIsDisplayed(){
         await expect(this.overviewPaymentSectionLabel).toBeVisible();
         await expect(this.overviewPaymentSectionValue).toBeVisible();
     }
 
-    async shippingSectionIsDisplayed(){
+    async verifyShippingSectionIsDisplayed(){
         await expect(this.overviewShippingSectionLabel).toBeVisible();
         await expect(this.overviewShippingSectionValue).toBeVisible();
     }
 
-    async priceTotalSectionIsDisplayed(){
+    async verifyPriceTotalSectionIsDisplayed(){
         await expect(this.overviewPriceTotalSectionLabel).toBeVisible();
         await expect(this.overviewPriceSubTotal).toBeVisible();
         await expect(this.overviewPriceTax).toBeVisible();
@@ -168,12 +137,12 @@ export class CheckoutPage {
         
     }
 
-    async overviewCancelButtonIsDisplayed(){
+    async verifyOverviewCancelButtonIsDisplayed(){
         await expect(this.overviewCancelButton).toBeVisible();
         await expect(this.overviewCancelButton).toBeEnabled();
     }
 
-    async finishButtonIsDisplayed(){
+    async verifyFinishButtonIsDisplayed(){
         await expect(this.finishButton).toBeVisible();
         await expect(this.finishButton).toBeEnabled();
     }
@@ -246,11 +215,11 @@ export class CheckoutPage {
         return trimValue;
     }
 
-    async cancelButtonOverview(){
+    async cancelCheckoutOverview(){
         await this.overviewCancelButton.click();
     }
 
-    async finishButtonOverview(){
+    async finishCheckout(){
         await this.finishButton.click();
     }
 
@@ -267,12 +236,12 @@ export class CheckoutPage {
         await expect(this.completeMessage).toHaveText("Your order has been dispatched, and will arrive just as fast as the pony can get there!");
     }
 
-    async completeBackButtonIsDisplayed(){
+    async verifyCompleteBackButtonIsDisplayed(){
         await expect(this.completeBackButton).toBeVisible();
         await expect(this.completeBackButton).toBeEnabled();
     }
     
-    async completeBackButtonIsClick(){
+    async clickBackHome(){
         await this.completeBackButton.click();
     }
 
@@ -282,5 +251,20 @@ export class CheckoutPage {
         console.log(productPrice + "=" + parseFloat(trimValue!));
         
         await expect(trimValue).toBe(productPrice);
+    }
+
+    async fillOutCheckoutForm(firstname: string, lastname: string, postalCode: string){
+        await this.firstNameInput.fill(firstname || "");
+        await this.lastNameInput.fill(lastname || "");
+        await this.postalCodeInput.fill(postalCode || "");
+    }
+
+    async clickContiueButton(){
+        await this.continueButton.click();
+    }
+
+    async verifyErrorValidationMessage(errorMessage: string){
+        await expect(this.errorMessage).toBeVisible();
+        await expect(this.errorMessage).toHaveText(errorMessage);
     }
 }

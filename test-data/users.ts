@@ -7,5 +7,5 @@ export const users = {
 }
 
 export const usersWithCheckoutInfo = {
-    user1: { firstname: "Xavier Axcel", lastname: "Sasis", postalCode: 1440 }
+    user1: { firstname: "Xavier Axcel", lastname: "Sasis", postalCode: "1440" }
 }
