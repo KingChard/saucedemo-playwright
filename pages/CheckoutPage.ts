@@ -114,7 +114,7 @@ export class CheckoutPage {
 
     async verifyProductSectionIsDisplayed(){
         await expect(this.overviewProductName).toBeVisible();
-        await expect(this.overviewProductDesc).toBeVisible;
+        await expect(this.overviewProductDesc).toBeVisible();
         await expect(this.overviewProductPrice).toBeVisible();
         await expect(this.overviewProductQuantity).toBeVisible();
     }
@@ -166,12 +166,11 @@ export class CheckoutPage {
         await expect(this.overviewProductPrice).toHaveText(productPrice);
     }
 
-    async verifyIfProductPriceIsMatchToItemTotal(productPrice: string){
+    async verifyIfProductPriceIsMatchToItemTotal(productPrice: number){
         const extractedValue = await this.overviewPriceSubTotal.textContent();
-        const trimValue = extractedValue?.replace("Item total: ","");
-        console.log(productPrice + "=" + parseFloat(trimValue!));
-        
-        await expect(trimValue).toBe(productPrice);
+        const trimValue = extractedValue?.replace("Item total: $","");
+        const parseValue = parseFloat(trimValue!);
+        await expect(parseValue).toBe(productPrice);
     }
 
     async verifyOverviewSpecificProductQuantity(productName: string, expectedQuantity: number){
@@ -192,27 +191,24 @@ export class CheckoutPage {
         await expect(specificProductPrice).toHaveText(productPrice);
     }
 
-    async computeItemTotal(product1: string, product2: string){
-        const extractedProduct1Value = product1.replace("$","");
-        const extractedProduct2Value = product2.replace("$","");
-        const intProduct1Value = parseFloat(extractedProduct1Value);
-        const intProduct2Value = parseFloat(extractedProduct2Value);
-        const itemTotal = intProduct1Value + intProduct2Value;
-        console.log(itemTotal);
+    computeItemTotal(product1: number, product2: number){
+        const itemTotal = product1 + product2;
         
-        return "$"+itemTotal.toString();
+        return itemTotal;
     }   
 
     async getExtractedItemValue(){
         const extractedValue = await this.overviewPriceSubTotal.textContent();
-        const trimValue = extractedValue?.replace("Item total: ","");
-        return trimValue;
+        const trimValue = extractedValue?.replace("Item total: $","");
+        const parseValue = parseFloat(trimValue!);
+        return parseValue;
     }
 
     async getExtractedTaxValue(){
         const extractedValue = await this.overviewPriceTax.textContent();
-        const trimValue = extractedValue?.replace("Tax: ","");
-        return trimValue;
+        const trimValue = extractedValue?.replace("Tax: $","");
+        const parseValue = parseFloat(trimValue!);
+        return parseValue;
     }
 
     async cancelCheckoutOverview(){
@@ -245,12 +241,18 @@ export class CheckoutPage {
         await this.completeBackButton.click();
     }
 
-    async verifyIfCalculatedPriceTotalIsMatchToDisplayedPriceTotal(productPrice: string){
+    async getExtractedTotalValue(){
         const extractedValue = await this.overviewPriceTotal.textContent();
-        const trimValue = extractedValue?.replace("Total: ","");
-        console.log(productPrice + "=" + parseFloat(trimValue!));
-        
-        await expect(trimValue).toBe(productPrice);
+        const trimValue = extractedValue?.replace("Total: $","");
+        const parseValue = parseFloat(trimValue!);
+        return parseValue;
+    }
+    async verifyCalculatedTotalMatchesDisplayedTotal(){
+        const itemValue = await this.getExtractedItemValue();
+        const taxValue = await this.getExtractedTaxValue();
+        const calculatedValue = this.computeItemTotal(itemValue,taxValue);
+        const totalValue = await this.getExtractedTotalValue();
+        await expect(calculatedValue).toBeCloseTo(totalValue,2);
     }
 
     async fillOutCheckoutForm(firstname: string, lastname: string, postalCode: string){
@@ -259,12 +261,18 @@ export class CheckoutPage {
         await this.postalCodeInput.fill(postalCode || "");
     }
 
-    async clickContiueButton(){
+    async clickContinueButton(){
         await this.continueButton.click();
     }
 
     async verifyErrorValidationMessage(errorMessage: string){
         await expect(this.errorMessage).toBeVisible();
         await expect(this.errorMessage).toHaveText(errorMessage);
+    }
+
+    async getExtractedProductPriceValue(productPrice: string){
+        const trimValue = productPrice?.replace("$","");
+        const parseValue = parseFloat(trimValue!);
+        return parseValue;
     }
 }

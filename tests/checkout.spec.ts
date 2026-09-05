@@ -94,7 +94,7 @@ test.describe("Checkout Page Test", () => {
 		await cartPage.proceedToCheckout();
 		
 		await checkoutPage.fillOutCheckoutForm("", userInfo.lastname, userInfo.postalCode);
-        await checkoutPage.clickContiueButton();
+        await checkoutPage.clickContinueButton();
         await checkoutPage.verifyErrorValidationMessage('Error: First Name is required');
 		await checkoutPage.verifyCheckoutInformationPageUrl();
     });
@@ -118,7 +118,7 @@ test.describe("Checkout Page Test", () => {
 		await cartPage.proceedToCheckout();
 		
 		await checkoutPage.fillOutCheckoutForm(userInfo.firstname, "", userInfo.postalCode);
-        await checkoutPage.clickContiueButton();
+        await checkoutPage.clickContinueButton();
         await checkoutPage.verifyErrorValidationMessage('Error: Last Name is required');
 		await checkoutPage.verifyCheckoutInformationPageUrl();
     });
@@ -142,7 +142,7 @@ test.describe("Checkout Page Test", () => {
 		await cartPage.proceedToCheckout();
 		
 		await checkoutPage.fillOutCheckoutForm(userInfo.firstname, userInfo.lastname, "");
-        await checkoutPage.clickContiueButton();
+        await checkoutPage.clickContinueButton();
         await checkoutPage.verifyErrorValidationMessage('Error: Postal Code is required');
 		await checkoutPage.verifyCheckoutInformationPageUrl();
     });
@@ -302,6 +302,7 @@ test.describe("Checkout Page Test", () => {
 
         await productPage.addProductToCart(productDataBackpack.name);
         const productPrice = await productPage.getProductPrice(productDataBackpack.name);
+        
         await productPage.openCartPage();
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
@@ -309,10 +310,12 @@ test.describe("Checkout Page Test", () => {
 
         await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
+        const parseBackpackPrice = await checkoutPage.getExtractedProductPriceValue(productPrice!);
+        
 
 
         await checkoutPage.verifyOverviewProductPrice(productPrice!);
-        await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(productPrice!);
+        await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(parseBackpackPrice!);
     });
 
     test('CHK-013: Verify Multiple Products on Checkout Overview', async ({ page }) => {
@@ -366,7 +369,6 @@ test.describe("Checkout Page Test", () => {
         const productBackpackPrice = await productPage.getProductPrice(productDataBackpack.name);
         await productPage.addProductToCart(productDataBikelight.name);
         const productBikelightPrice = await productPage.getProductPrice(productDataBikelight.name);
-        console.log(productBackpackPrice+" "+ productBikelightPrice);
         await productPage.openCartPage();
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
@@ -375,8 +377,9 @@ test.describe("Checkout Page Test", () => {
 
         await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
-        const expectedItemTotal = await checkoutPage.computeItemTotal(productBackpackPrice!, productBikelightPrice!);
-        console.log(expectedItemTotal);
+        const parseBackpackPrice = await checkoutPage.getExtractedProductPriceValue(productBackpackPrice!);
+        const parseBikelightPrice = await checkoutPage.getExtractedProductPriceValue(productBikelightPrice!);
+        const expectedItemTotal = await checkoutPage.computeItemTotal(parseBackpackPrice, parseBikelightPrice);
 
         await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(expectedItemTotal);
     });
@@ -410,10 +413,9 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyPriceTotalSectionIsDisplayed();
         const itemTotalValue = await checkoutPage.getExtractedItemValue();
         const taxValue = await checkoutPage.getExtractedTaxValue();
-        console.log(itemTotalValue + " " + taxValue);
         
         const computedValue = await checkoutPage.computeItemTotal(itemTotalValue!,taxValue!);
-        await checkoutPage.verifyIfCalculatedPriceTotalIsMatchToDisplayedPriceTotal(computedValue);
+        await checkoutPage.verifyCalculatedTotalMatchesDisplayedTotal();
     });
 
     test('CHK-016: Cancel from Checkout Overview', async ({ page }) => {
@@ -582,15 +584,16 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutOverviewPageTitle();
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBackpack.name,productDataBackpack.description, productDataBackpack.price);
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBikelight.name, productDataBikelight.description, productDataBikelight.price);
-        const expectedItemTotal = await checkoutPage.computeItemTotal(productBackpackPrice!, productBikelightPrice!);
+        const parseBackpackPrice = await checkoutPage.getExtractedProductPriceValue(productBackpackPrice!);
+        const parseBikelightPrice = await checkoutPage.getExtractedProductPriceValue(productBikelightPrice!);
+        const expectedItemTotal = await checkoutPage.computeItemTotal(parseBackpackPrice!, parseBikelightPrice!);
         await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(expectedItemTotal);
         await checkoutPage.verifyOverviewProductCount(2);
         const itemTotalValue = await checkoutPage.getExtractedItemValue();
         const taxValue = await checkoutPage.getExtractedTaxValue();
-        console.log(itemTotalValue + " " + taxValue);
         
         const computedValue = await checkoutPage.computeItemTotal(itemTotalValue!,taxValue!);
-        await checkoutPage.verifyIfCalculatedPriceTotalIsMatchToDisplayedPriceTotal(computedValue);
+        await checkoutPage.verifyCalculatedTotalMatchesDisplayedTotal();
         await checkoutPage.finishCheckout();
 
         await checkoutPage.verifyCompletePageUrl();
