@@ -310,7 +310,7 @@ test.describe("Checkout Page Test", () => {
 
         await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
-        const parseBackpackPrice = await checkoutPage.getExtractedProductPriceValue(productPrice!);
+        const parseBackpackPrice = await checkoutPage.parseProductPrice(productPrice!);
         
 
 
@@ -377,8 +377,8 @@ test.describe("Checkout Page Test", () => {
 
         await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
-        const parseBackpackPrice = await checkoutPage.getExtractedProductPriceValue(productBackpackPrice!);
-        const parseBikelightPrice = await checkoutPage.getExtractedProductPriceValue(productBikelightPrice!);
+        const parseBackpackPrice = await checkoutPage.parseProductPrice(productBackpackPrice!);
+        const parseBikelightPrice = await checkoutPage.parseProductPrice(productBikelightPrice!);
         const expectedItemTotal = await checkoutPage.computeItemTotal(parseBackpackPrice, parseBikelightPrice);
 
         await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(expectedItemTotal);
@@ -411,10 +411,6 @@ test.describe("Checkout Page Test", () => {
 
         await checkoutPage.verifyCheckoutOverviewPageUrl();
         await checkoutPage.verifyPriceTotalSectionIsDisplayed();
-        const itemTotalValue = await checkoutPage.getExtractedItemValue();
-        const taxValue = await checkoutPage.getExtractedTaxValue();
-        
-        const computedValue = await checkoutPage.computeItemTotal(itemTotalValue!,taxValue!);
         await checkoutPage.verifyCalculatedTotalMatchesDisplayedTotal();
     });
 
@@ -584,15 +580,12 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutOverviewPageTitle();
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBackpack.name,productDataBackpack.description, productDataBackpack.price);
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBikelight.name, productDataBikelight.description, productDataBikelight.price);
-        const parseBackpackPrice = await checkoutPage.getExtractedProductPriceValue(productBackpackPrice!);
-        const parseBikelightPrice = await checkoutPage.getExtractedProductPriceValue(productBikelightPrice!);
+        const parseBackpackPrice = await checkoutPage.parseProductPrice(productBackpackPrice!);
+        const parseBikelightPrice = await checkoutPage.parseProductPrice(productBikelightPrice!);
         const expectedItemTotal = await checkoutPage.computeItemTotal(parseBackpackPrice!, parseBikelightPrice!);
         await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(expectedItemTotal);
         await checkoutPage.verifyOverviewProductCount(2);
-        const itemTotalValue = await checkoutPage.getExtractedItemValue();
-        const taxValue = await checkoutPage.getExtractedTaxValue();
         
-        const computedValue = await checkoutPage.computeItemTotal(itemTotalValue!,taxValue!);
         await checkoutPage.verifyCalculatedTotalMatchesDisplayedTotal();
         await checkoutPage.finishCheckout();
 

@@ -4,9 +4,9 @@ export class CheckoutPage {
     readonly page: Page;
     readonly informationPageTitle: Locator;
     readonly firstNameInput: Locator;
-    readonly lastNameInput: Locator
+    readonly lastNameInput: Locator;
     readonly postalCodeInput: Locator;
-    readonly continueButton: Locator
+    readonly continueButton: Locator;
     readonly informationCancelButton: Locator;
     readonly errorMessage: Locator;
     
@@ -22,7 +22,7 @@ export class CheckoutPage {
     readonly overviewShippingSectionValue: Locator;
     readonly overviewPriceTotalSectionLabel: Locator;
     readonly overviewPriceSubTotal: Locator;
-    readonly overviewPriceTax: Locator
+    readonly overviewPriceTax: Locator;
     readonly overviewPriceTotal: Locator;
     readonly overviewCancelButton: Locator;
     readonly finishButton: Locator;
@@ -147,7 +147,7 @@ export class CheckoutPage {
         await expect(this.finishButton).toBeEnabled();
     }
 
-    async verifyOverviewProductInformation(productName: string, productDesc: string, productPrice: string,){
+    async verifyOverviewProductInformation(productName: string, productDesc: string, productPrice: string){
         await expect(this.overviewProductName).toHaveText(productName);
         await expect(this.overviewProductDesc).toHaveText(productDesc);
         await expect(this.overviewProductPrice).toHaveText(productPrice);
@@ -181,7 +181,7 @@ export class CheckoutPage {
     }
 
     async verifyOverviewSpecificProductInformation(productName: string, productDesc: string, productPrice: string){
-        const specificProduct = await this.overviewProductList.filter({hasText: productName});
+        const specificProduct = this.overviewProductList.filter({hasText: productName});
         const specificProductName = specificProduct.getByTestId('inventory-item-name');
         const specificProductDesc = specificProduct.getByTestId('inventory-item-desc');
         const specificProductPrice = specificProduct.getByTestId('inventory-item-price');
@@ -197,14 +197,14 @@ export class CheckoutPage {
         return itemTotal;
     }   
 
-    async getExtractedItemValue(){
+    async getItemTotal(){
         const extractedValue = await this.overviewPriceSubTotal.textContent();
         const trimValue = extractedValue?.replace("Item total: $","");
         const parseValue = parseFloat(trimValue!);
         return parseValue;
     }
 
-    async getExtractedTaxValue(){
+    async getTax(){
         const extractedValue = await this.overviewPriceTax.textContent();
         const trimValue = extractedValue?.replace("Tax: $","");
         const parseValue = parseFloat(trimValue!);
@@ -241,17 +241,17 @@ export class CheckoutPage {
         await this.completeBackButton.click();
     }
 
-    async getExtractedTotalValue(){
+    async getTotal(){
         const extractedValue = await this.overviewPriceTotal.textContent();
         const trimValue = extractedValue?.replace("Total: $","");
         const parseValue = parseFloat(trimValue!);
         return parseValue;
     }
     async verifyCalculatedTotalMatchesDisplayedTotal(){
-        const itemValue = await this.getExtractedItemValue();
-        const taxValue = await this.getExtractedTaxValue();
+        const itemValue = await this.getItemTotal();
+        const taxValue = await this.getTax();
         const calculatedValue = this.computeItemTotal(itemValue,taxValue);
-        const totalValue = await this.getExtractedTotalValue();
+        const totalValue = await this.getTotal();
         await expect(calculatedValue).toBeCloseTo(totalValue,2);
     }
 
@@ -270,7 +270,7 @@ export class CheckoutPage {
         await expect(this.errorMessage).toHaveText(errorMessage);
     }
 
-    async getExtractedProductPriceValue(productPrice: string){
+    parseProductPrice(productPrice: string){
         const trimValue = productPrice?.replace("$","");
         const parseValue = parseFloat(trimValue!);
         return parseValue;
