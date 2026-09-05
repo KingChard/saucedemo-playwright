@@ -2,7 +2,6 @@ import { test } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductPage } from "../pages/ProductPage";
 import { CartPage } from "../pages/CartPage";
-import { ProductDetailsPage } from "../pages/ProductDetailsPage";
 import { CheckoutPage } from "../pages/CheckoutPage";
 import { users, usersWithCheckoutInfo } from "../test-data/users";
 import { products } from "../test-data/products";
@@ -27,7 +26,7 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutInformationPageUrl();
         await checkoutPage.verifyCheckoutInformationPageTitle();
         await checkoutPage.checkoutFormFieldsAreDisplayed();
-        await checkoutPage.informatioCancelButtonIsDisplayed();
+        await checkoutPage.informationCancelButtonIsDisplayed();
         await checkoutPage.continueButtonIsDisplayed();
     });
 
@@ -48,7 +47,7 @@ test.describe("Checkout Page Test", () => {
         await cartPage.proceedToCheckout();
 
         await checkoutPage.checkoutFormFieldsAreDisplayed();
-        await checkoutPage.informatioCancelButtonIsDisplayed();
+        await checkoutPage.informationCancelButtonIsDisplayed();
         await checkoutPage.continueButtonIsDisplayed();
     });
 
@@ -220,6 +219,7 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutOverviewPageUrl();
         await checkoutPage.verifyCheckoutOverviewPageTitle();
         await checkoutPage.productSectionIsDisplayed();
+        await checkoutPage.paymentSectionIsDisplayed();
         await checkoutPage.shippingSectionIsDisplayed();
         await checkoutPage.priceTotalSectionIsDisplayed();
         await checkoutPage.overviewCancelButtonIsDisplayed();
@@ -328,7 +328,7 @@ test.describe("Checkout Page Test", () => {
         
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
-        await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+        await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
         await cartPage.proceedToCheckout();
 
         await checkoutPage.checkoutFormFieldsAreDisplayed();
@@ -337,6 +337,8 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBackpack.name, productDataBackpack.description, productDataBackpack.price);
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBikelight.name, productDataBikelight.description, productDataBikelight.price);
         await checkoutPage.verifyOverviewProductCount(2);
+        await checkoutPage.verifyOverviewSpecificProductQuantity(productDataBackpack.name, 1);
+        await checkoutPage.verifyOverviewSpecificProductQuantity(productDataBikelight.name, 1);
 
 
     });
@@ -362,7 +364,7 @@ test.describe("Checkout Page Test", () => {
         await productPage.openCartPage();
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
-        await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+        await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
         await cartPage.proceedToCheckout();
 
         await checkoutPage.checkoutFormFieldsAreDisplayed();
@@ -392,7 +394,7 @@ test.describe("Checkout Page Test", () => {
         
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
-        await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+        await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
         await cartPage.proceedToCheckout();
 
         await checkoutPage.checkoutFormFieldsAreDisplayed();
@@ -404,7 +406,8 @@ test.describe("Checkout Page Test", () => {
         const taxValue = await checkoutPage.getExtractedTaxValue();
         console.log(itemTotalValue + " " + taxValue);
         
-        await checkoutPage.computeItemTotal(itemTotalValue!,taxValue!);
+        const computedValue = await checkoutPage.computeItemTotal(itemTotalValue!,taxValue!);
+        await checkoutPage.verifyIfCalculatedPriceTotalIsMatchToDisplayedPriceTotal(computedValue);
     });
 
     test('CHK-016: Cancel from Checkout Overview', async ({ page }) => {
@@ -426,7 +429,7 @@ test.describe("Checkout Page Test", () => {
         
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
-        await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+        await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
         await cartPage.proceedToCheckout();
 
         await checkoutPage.checkoutFormFieldsAreDisplayed();
@@ -438,6 +441,10 @@ test.describe("Checkout Page Test", () => {
         await productPage.verifyProductPageUrl();
         await productPage.verifyPageTitle();
         await productPage.verifyProductCartBadge(2);
+        await productPage.openCartPage();
+
+        await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+        await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
     });
 
     test('CHK-017: Complete Checkout Successfully', async ({ page }) => {
@@ -549,7 +556,9 @@ test.describe("Checkout Page Test", () => {
         await loginPage.login(userData.username, userData.password);
 
         await productPage.addProductToCart(productDataBackpack.name);
+        const productBackpackPrice = await productPage.getProductPrice(productDataBackpack.name);
         await productPage.addProductToCart(productDataBikelight.name);
+        const productBikelightPrice = await productPage.getProductPrice(productDataBikelight.name);
         await productPage.verifyProductCartBadge(2);
         await productPage.openCartPage();
 
@@ -567,6 +576,8 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutOverviewPageTitle();
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBackpack.name,productDataBackpack.description, productDataBackpack.price);
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBikelight.name, productDataBikelight.description, productDataBikelight.price);
+        const expectedItemTotal = await checkoutPage.computeItemTotal(productBackpackPrice!, productBikelightPrice!);
+        await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(expectedItemTotal);
         await checkoutPage.verifyOverviewProductCount(2);
         await checkoutPage.finishButtonOverview();
 

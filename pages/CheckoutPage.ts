@@ -33,7 +33,7 @@ export class CheckoutPage {
     readonly completeHeading: Locator;
     readonly completeMessage: Locator;
     readonly completeBackButton: Locator;
-    readonly completeGeneratePdfButton: Locator;
+    readonly completedGeneratePdfButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -68,7 +68,7 @@ export class CheckoutPage {
         this.completeHeading = page.getByTestId('complete-header');
         this.completeMessage = page.getByTestId('complete-text');
         this.completeBackButton = page.getByRole('button', {name: 'Back Home'});
-        this.completeGeneratePdfButton = page.getByRole('button', {name: 'Generate PDF Order'});
+        this.completedGeneratePdfButton = page.getByRole('button', {name: 'Generate PDF Order'});
     }
 
     async gotoCheckoutInformationPage(){
@@ -94,7 +94,7 @@ export class CheckoutPage {
         await expect(this.postalCodeInput).toBeEditable();
     }
 
-    async informatioCancelButtonIsDisplayed() {
+    async informationCancelButtonIsDisplayed() {
         await expect(this.informationCancelButton).toBeVisible();
         await expect(this.informationCancelButton).toBeEnabled();
     }
@@ -145,7 +145,7 @@ export class CheckoutPage {
 
     async productSectionIsDisplayed(){
         await expect(this.overviewProductName).toBeVisible();
-        await expect(this.overviewProductPrice).toBeVisible;
+        await expect(this.overviewProductDesc).toBeVisible;
         await expect(this.overviewProductPrice).toBeVisible();
         await expect(this.overviewProductQuantity).toBeVisible();
     }
@@ -206,8 +206,8 @@ export class CheckoutPage {
     }
 
     async verifyOverviewSpecificProductQuantity(productName: string, expectedQuantity: number){
-        const specificOverwviewItem = this.overviewProductList.filter({ hasText: productName });
-        const itemQuantity = specificOverwviewItem.getByTestId('item-quantity');
+        const specificOverviewItem = this.overviewProductList.filter({ hasText: productName });
+        const itemQuantity = specificOverviewItem.getByTestId('item-quantity');
 
         await expect(itemQuantity).toHaveText(expectedQuantity.toString());
     }
@@ -274,5 +274,13 @@ export class CheckoutPage {
     
     async completeBackButtonIsClick(){
         await this.completeBackButton.click();
+    }
+
+    async verifyIfCalculatedPriceTotalIsMatchToDisplayedPriceTotal(productPrice: string){
+        const extractedValue = await this.overviewPriceTotal.textContent();
+        const trimValue = extractedValue?.replace("Total: ","");
+        console.log(productPrice + "=" + parseFloat(trimValue!));
+        
+        await expect(trimValue).toBe(productPrice);
     }
 }
