@@ -544,6 +544,9 @@ test.describe("Checkout Page Test", () => {
         await productPage.verifyPageTitle();
         await productPage.verifyProductList();
         await productPage.verifyProductCartBadgeIsNotVisible();
+        await productPage.openCartPage();
+
+        await cartPage.verifyCartIsEmpty();
     });
 
     test('CHK-020: Complete Checkout with Multiple Products End-to-End', async ({ page }) => {
@@ -580,9 +583,9 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutOverviewPageTitle();
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBackpack.name,productDataBackpack.description, productDataBackpack.price);
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBikelight.name, productDataBikelight.description, productDataBikelight.price);
-        const parseBackpackPrice = await checkoutPage.parseProductPrice(productBackpackPrice!);
-        const parseBikelightPrice = await checkoutPage.parseProductPrice(productBikelightPrice!);
-        const expectedItemTotal = await checkoutPage.computeItemTotal(parseBackpackPrice!, parseBikelightPrice!);
+        const parseBackpackPrice = checkoutPage.parseProductPrice(productBackpackPrice!);
+        const parseBikelightPrice = checkoutPage.parseProductPrice(productBikelightPrice!);
+        const expectedItemTotal = checkoutPage.computeItemTotal(parseBackpackPrice!, parseBikelightPrice!);
         await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(expectedItemTotal);
         await checkoutPage.verifyOverviewProductCount(2);
         
