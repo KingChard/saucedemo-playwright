@@ -1,23 +1,26 @@
-export const checkoutValidationData = {
-    firstNameData: {
-        testName: 'First Name is empty',
+export const checkoutValidationData = [
+    {
+        testId: 'CHK-004',
+        testName: 'Verify First Name is Required',
         firstname: '',
         lastname: 'Axcel',
         postalCode: '1440',
         expectedError: 'Error: First Name is required'
     },
-    lastNameData: {
-        testName: 'Last Name is empty',
+    {
+        testId: 'CHK-005',
+        testName: 'Verify Last Name is Required',
         firstname: 'Xavier',
         lastname: '',
         postalCode: '1440',
         expectedError: 'Error: Last Name is required'
     },
-    postalCodeData: {
-        testName: 'Postal Code is empty',
+    {
+        testId: 'CHK-006',
+        testName: 'Verify Postal Code is Required',
         firstname: 'Xavier',
         lastname: 'Axcel',
         postalCode: '',
         expectedError: 'Error: Postal Code is required'
     }
-};
+];

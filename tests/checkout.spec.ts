@@ -1,3 +1,4 @@
+import { checkoutValidationData } from './../test-data/checkouts';
 import { test } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductPage } from "../pages/ProductPage";
@@ -75,77 +76,105 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutOverviewPageTitle();
     });
 
-    test('CHK-004: Verify First Name is Required', async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const checkoutPage = new CheckoutPage(page);
-        const userData = users.validUser;
-        const productDataBackpack = products.backpack;
-        const userInfo = usersWithCheckoutInfo.user1;
-		
-		await loginPage.gotoLoginPage();
-		await loginPage.login(userData.username, userData.password);
-		
-		await productPage.addProductToCart(productDataBackpack.name);
-		await productPage.openCartPage();
-		
-		await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
-		await cartPage.proceedToCheckout();
-		
-		await checkoutPage.fillOutCheckoutForm("", userInfo.lastname, userInfo.postalCode);
-        await checkoutPage.clickContinueButton();
-        await checkoutPage.verifyErrorValidationMessage('Error: First Name is required');
-		await checkoutPage.verifyCheckoutInformationPageUrl();
-    });
+    for (const data of checkoutValidationData) {
+        test(`${data.testId}: ${data.testName}`, async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
+            const checkoutPage = new CheckoutPage(page);
+            const userData = users.validUser;
+            const productDataBackpack = products.backpack;
 
-    test('CHK-005: Verify Last Name is Required', async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const checkoutPage = new CheckoutPage(page);
-        const userData = users.validUser;
-        const productDataBackpack = products.backpack;
-        const userInfo = usersWithCheckoutInfo.user1;
-		
-		await loginPage.gotoLoginPage();
-		await loginPage.login(userData.username, userData.password);
-		
-		await productPage.addProductToCart(productDataBackpack.name);
-		await productPage.openCartPage();
-		
-		await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
-		await cartPage.proceedToCheckout();
-		
-		await checkoutPage.fillOutCheckoutForm(userInfo.firstname, "", userInfo.postalCode);
-        await checkoutPage.clickContinueButton();
-        await checkoutPage.verifyErrorValidationMessage('Error: Last Name is required');
-		await checkoutPage.verifyCheckoutInformationPageUrl();
-    });
+            await loginPage.gotoLoginPage();
+            await loginPage.login(userData.username, userData.password);
 
-    test('CHK-006: Verify Postal Code is Required', async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const checkoutPage = new CheckoutPage(page);
-        const userData = users.validUser;
-        const productDataBackpack = products.backpack;
-        const userInfo = usersWithCheckoutInfo.user1;
-		
-		await loginPage.gotoLoginPage();
-		await loginPage.login(userData.username, userData.password);
-		
-		await productPage.addProductToCart(productDataBackpack.name);
-		await productPage.openCartPage();
-		
-		await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
-		await cartPage.proceedToCheckout();
-		
-		await checkoutPage.fillOutCheckoutForm(userInfo.firstname, userInfo.lastname, "");
-        await checkoutPage.clickContinueButton();
-        await checkoutPage.verifyErrorValidationMessage('Error: Postal Code is required');
-		await checkoutPage.verifyCheckoutInformationPageUrl();
-    });
+            await productPage.addProductToCart(productDataBackpack.name);
+            await productPage.openCartPage();
+
+            await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+            await cartPage.proceedToCheckout();
+
+            await checkoutPage.fillOutCheckoutForm(data.firstname, data.lastname, data.postalCode);
+
+            await checkoutPage.clickContinueButton();
+
+            await checkoutPage.verifyErrorValidationMessage(data.expectedError);
+
+            await checkoutPage.verifyCheckoutInformationPageUrl();
+        });
+    }
+
+    // test('CHK-004: Verify First Name is Required', async ({ page }) => {
+    //     const loginPage = new LoginPage(page);
+    //     const productPage = new ProductPage(page);
+    //     const cartPage = new CartPage(page);
+    //     const checkoutPage = new CheckoutPage(page);
+    //     const userData = users.validUser;
+    //     const productDataBackpack = products.backpack;
+    //     const userInfo = usersWithCheckoutInfo.user1;
+
+    //     await loginPage.gotoLoginPage();
+    //     await loginPage.login(userData.username, userData.password);
+
+    //     await productPage.addProductToCart(productDataBackpack.name);
+    //     await productPage.openCartPage();
+
+    //     await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+    //     await cartPage.proceedToCheckout();
+
+    //     await checkoutPage.fillOutCheckoutForm("", userInfo.lastname, userInfo.postalCode);
+    //     await checkoutPage.clickContinueButton();
+    //     await checkoutPage.verifyErrorValidationMessage('Error: First Name is required');
+    //     await checkoutPage.verifyCheckoutInformationPageUrl();
+    // });
+
+    // test('CHK-005: Verify Last Name is Required', async ({ page }) => {
+    //     const loginPage = new LoginPage(page);
+    //     const productPage = new ProductPage(page);
+    //     const cartPage = new CartPage(page);
+    //     const checkoutPage = new CheckoutPage(page);
+    //     const userData = users.validUser;
+    //     const productDataBackpack = products.backpack;
+    //     const userInfo = usersWithCheckoutInfo.user1;
+
+    //     await loginPage.gotoLoginPage();
+    //     await loginPage.login(userData.username, userData.password);
+
+    //     await productPage.addProductToCart(productDataBackpack.name);
+    //     await productPage.openCartPage();
+
+    //     await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+    //     await cartPage.proceedToCheckout();
+
+    //     await checkoutPage.fillOutCheckoutForm(userInfo.firstname, "", userInfo.postalCode);
+    //     await checkoutPage.clickContinueButton();
+    //     await checkoutPage.verifyErrorValidationMessage('Error: Last Name is required');
+    //     await checkoutPage.verifyCheckoutInformationPageUrl();
+    // });
+
+    // test('CHK-006: Verify Postal Code is Required', async ({ page }) => {
+    //     const loginPage = new LoginPage(page);
+    //     const productPage = new ProductPage(page);
+    //     const cartPage = new CartPage(page);
+    //     const checkoutPage = new CheckoutPage(page);
+    //     const userData = users.validUser;
+    //     const productDataBackpack = products.backpack;
+    //     const userInfo = usersWithCheckoutInfo.user1;
+
+    //     await loginPage.gotoLoginPage();
+    //     await loginPage.login(userData.username, userData.password);
+
+    //     await productPage.addProductToCart(productDataBackpack.name);
+    //     await productPage.openCartPage();
+
+    //     await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+    //     await cartPage.proceedToCheckout();
+
+    //     await checkoutPage.fillOutCheckoutForm(userInfo.firstname, userInfo.lastname, "");
+    //     await checkoutPage.clickContinueButton();
+    //     await checkoutPage.verifyErrorValidationMessage('Error: Postal Code is required');
+    //     await checkoutPage.verifyCheckoutInformationPageUrl();
+    // });
 
     test('CHK-007: Cancel Checkout from Information Page', async ({ page }) => {
         const loginPage = new LoginPage(page);
@@ -154,15 +183,15 @@ test.describe("Checkout Page Test", () => {
         const checkoutPage = new CheckoutPage(page);
         const userData = users.validUser;
         const productDataBackpack = products.backpack;
-		
-		await loginPage.gotoLoginPage();
-		await loginPage.login(userData.username, userData.password);
-		
-		await productPage.addProductToCart(productDataBackpack.name);
-		await productPage.openCartPage();
-		
-		await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
-		await cartPage.proceedToCheckout();
+
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+
+        await productPage.addProductToCart(productDataBackpack.name);
+        await productPage.openCartPage();
+
+        await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+        await cartPage.proceedToCheckout();
 
         await checkoutPage.verifyCheckoutInformationPageUrl();
         await checkoutPage.verifyCheckoutInformationPageTitle();
@@ -180,15 +209,15 @@ test.describe("Checkout Page Test", () => {
         const checkoutPage = new CheckoutPage(page);
         const userData = users.validUser;
         const productDataBackpack = products.backpack;
-		
-		await loginPage.gotoLoginPage();
-		await loginPage.login(userData.username, userData.password);
-		
-		await productPage.addProductToCart(productDataBackpack.name);
-		await productPage.openCartPage();
-		
-		await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
-		await cartPage.proceedToCheckout();
+
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+
+        await productPage.addProductToCart(productDataBackpack.name);
+        await productPage.openCartPage();
+
+        await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
+        await cartPage.proceedToCheckout();
 
         await checkoutPage.verifyCheckoutInformationPageUrl();
         await checkoutPage.verifyCheckoutInformationPageTitle();
@@ -302,7 +331,7 @@ test.describe("Checkout Page Test", () => {
 
         await productPage.addProductToCart(productDataBackpack.name);
         const productPrice = await productPage.getProductPrice(productDataBackpack.name);
-        
+
         await productPage.openCartPage();
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
@@ -311,7 +340,7 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutFormFieldsAreDisplayed();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
         const parseBackpackPrice = await checkoutPage.parseProductPrice(productPrice!);
-        
+
 
 
         await checkoutPage.verifyOverviewProductPrice(productPrice!);
@@ -334,7 +363,7 @@ test.describe("Checkout Page Test", () => {
         await productPage.addProductToCart(productDataBackpack.name);
         await productPage.addProductToCart(productDataBikelight.name);
         await productPage.openCartPage();
-        
+
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
@@ -400,7 +429,7 @@ test.describe("Checkout Page Test", () => {
         await productPage.addProductToCart(productDataBackpack.name);
         await productPage.addProductToCart(productDataBikelight.name);
         await productPage.openCartPage();
-        
+
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
@@ -430,7 +459,7 @@ test.describe("Checkout Page Test", () => {
         await productPage.addProductToCart(productDataBackpack.name);
         await productPage.addProductToCart(productDataBikelight.name);
         await productPage.openCartPage();
-        
+
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.verifyProductInCart(productDataBikelight.name, productDataBikelight.price, productDataBikelight.description);
@@ -465,7 +494,7 @@ test.describe("Checkout Page Test", () => {
 
         await productPage.addProductToCart(productDataBackpack.name);
         await productPage.openCartPage();
-        
+
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
@@ -494,7 +523,7 @@ test.describe("Checkout Page Test", () => {
 
         await productPage.addProductToCart(productDataBackpack.name);
         await productPage.openCartPage();
-        
+
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
@@ -525,7 +554,7 @@ test.describe("Checkout Page Test", () => {
 
         await productPage.addProductToCart(productDataBackpack.name);
         await productPage.openCartPage();
-        
+
 
         await cartPage.verifyProductInCart(productDataBackpack.name, productDataBackpack.price, productDataBackpack.description);
         await cartPage.proceedToCheckout();
@@ -578,17 +607,17 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutInformationPageUrl();
         await checkoutPage.verifyCheckoutInformationPageTitle();
         await checkoutPage.fillOutCheckoutFormAndContinue(userInfo.firstname, userInfo.lastname, userInfo.postalCode);
-        
+
         await checkoutPage.verifyCheckoutOverviewPageUrl();
         await checkoutPage.verifyCheckoutOverviewPageTitle();
-        await checkoutPage.verifyOverviewSpecificProductInformation(productDataBackpack.name,productDataBackpack.description, productDataBackpack.price);
+        await checkoutPage.verifyOverviewSpecificProductInformation(productDataBackpack.name, productDataBackpack.description, productDataBackpack.price);
         await checkoutPage.verifyOverviewSpecificProductInformation(productDataBikelight.name, productDataBikelight.description, productDataBikelight.price);
         const parseBackpackPrice = checkoutPage.parseProductPrice(productBackpackPrice!);
         const parseBikelightPrice = checkoutPage.parseProductPrice(productBikelightPrice!);
         const expectedItemTotal = checkoutPage.computeItemTotal(parseBackpackPrice!, parseBikelightPrice!);
         await checkoutPage.verifyIfProductPriceIsMatchToItemTotal(expectedItemTotal);
         await checkoutPage.verifyOverviewProductCount(2);
-        
+
         await checkoutPage.verifyCalculatedTotalMatchesDisplayedTotal();
         await checkoutPage.finishCheckout();
 
