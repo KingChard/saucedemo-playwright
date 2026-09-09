@@ -2,37 +2,57 @@ import { test } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductPage } from "../pages/ProductPage";
 import { users } from "../test-data/users";
-import { products } from "../test-data/products";
+import { products, productData } from "../test-data/products";
 import { CartPage } from "../pages/CartPage";
 
 test.describe("Product Page Tests", () => {
-    test("TC01: Add a specific product to the cart", async ({ page }) => {
-        const loginPage = new LoginPage(page);
+    // test("TC01: Add a specific product to the cart", async ({ page }) => {
+    //     const loginPage = new LoginPage(page);
+    //     const productPage = new ProductPage(page);
+    //     const cartPage = new CartPage(page);
+    //     const userData = users.validUser;
+    //     const productName = products.backpack.name;
+    //     const productPrice = products.backpack.price;
+    //     const productDescription = products.backpack.description;
+
+    //     //Login valid credentials
+    //     await loginPage.gotoLoginPage();
+    //     await loginPage.login(userData.username, userData.password);
+    //     console.log("URL:", page.url());
+    //     console.log("Title:", await page.title());
+    //     await productPage.gotoProductPage();
+    //     console.log("Product page loaded");
+
+    //     //Add specific product to cart
+    //     await productPage.addProductToCart(productName);
+    //     await productPage.verifyProductCartBadge(1); // Verify that the cart badge shows 1 item
+    //     await productPage.openCartPage();
+
+    //     await cartPage.verifyCartPageUrl(); // Verify that the cart page URL is correct
+    //     await cartPage.verifyCartPageTitle();
+    //     await cartPage.verifyProductInCart(productName, productPrice, productDescription); // Verify that the product is in the cart with the correct name and price
+
+    // });
+    for (const data of productData) {
+        test(`${data.testId}: ${data.testName}`, async ({ page }) => {
+            const loginPage = new LoginPage(page);
         const productPage = new ProductPage(page);
         const cartPage = new CartPage(page);
-        const userData = users.validUser;
-        const productName = products.backpack.name;
-        const productPrice = products.backpack.price;
-        const productDescription = products.backpack.description;
-
-        //Login valid credentials
-        await loginPage.gotoLoginPage();
+		const userData = users.validUser;
+		await loginPage.gotoLoginPage();
         await loginPage.login(userData.username, userData.password);
-        console.log("URL:", page.url());
-        console.log("Title:", await page.title());
         await productPage.gotoProductPage();
-        console.log("Product page loaded");
 
         //Add specific product to cart
-        await productPage.addProductToCart(productName);
+        await productPage.addProductToCart(data.name);
         await productPage.verifyProductCartBadge(1); // Verify that the cart badge shows 1 item
         await productPage.openCartPage();
 
         await cartPage.verifyCartPageUrl(); // Verify that the cart page URL is correct
         await cartPage.verifyCartPageTitle();
-        await cartPage.verifyProductInCart(productName, productPrice, productDescription); // Verify that the product is in the cart with the correct name and price
-
-    });
+		await cartPage.verifyProductInCart(data.name, data.price, data.description); // Verify that the product is in the cart with the correct name and price
+        });
+    }
 
     test("TC02: Add Two product in the cart and after remove the first product", async ({ page }) => {
 
