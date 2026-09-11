@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test } from "../fixtures/pages.fixture";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductPage } from "../pages/ProductPage";
 import { CartPage } from "../pages/CartPage";
@@ -8,10 +8,7 @@ import { users } from "../test-data/users";
 import { products } from "../test-data/products";
 
 test.describe("Cart Page Test", () => {
-    test('CT-001: Verify Cart Page Opens Correctly ', async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
+    test('CT-001: Verify Cart Page Opens Correctly ', async ({ loginPage, productPage, cartPage }) => {
         const userData = users.validUser;
 
         await loginPage.gotoLoginPage();

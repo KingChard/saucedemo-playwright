@@ -1,99 +1,61 @@
-import { test, expect } from "@playwright/test";
-import { LoginPage } from "../pages/LoginPage";
-import { ProductPage } from "../pages/ProductPage";
-import { CartPage } from "../pages/CartPage";
+import { test } from "../fixtures/pages.fixture";
 import { users } from "../test-data/users";
 import { products } from "../test-data/products";
-import { ProductDetailsPage } from "../pages/ProductDetailsPage";
+import { productDetailData } from "../test-data/productdetail";
 
 test.describe("Product Details Page Tests", () => {
-    test("PDT-001: Open a specific product's details", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailsPage = new ProductDetailsPage(page);
+    test.beforeEach(async ({ loginPage }) => {
         const userData = users.validUser;
+        await loginPage.gotoLoginPage();
+        await loginPage.login(userData.username, userData.password);
+
+    });
+
+    test("PDT-001: Open a specific product's details", async ({ productPage, productDetailsPage }) => {
+
         const productName = products.backpack.name;
         const productPrice = products.backpack.price;
         const productDescription = products.backpack.description;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.verifyProductDetails(productName, productPrice, productDescription);
     });
 
-    test("PDT-002: Verify product name is displayed correctly in the product details page", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailsPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-002: Verify product name is displayed correctly in the product details page", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.verifyProductName(productName);
     });
 
-    test("PDT-003: Verify product price is displayed correctly in the product details page", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailsPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-003: Verify product price is displayed correctly in the product details page", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
         const productPrice = products.backpack.price;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.verifyProductPrice(productPrice);
     });
 
-    test("PDT-004: Verify product description is displayed correctly in the product details page", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailsPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-004: Verify product description is displayed correctly in the product details page", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
         const productDescription = products.backpack.description;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.verifyProductDescription(productDescription);
     });
 
-    test("PDT-005: Verify that the product image is displayed correctly in the product details page", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailsPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-005: Verify that the product image is displayed correctly in the product details page", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.verifyProductImage(productName);
     });
 
-    test("PDT-006: Add product to cart from details page", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const productDetailsPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-006: Add product to cart from details page", async ({ productPage, cartPage, productDetailsPage }) => {
         const productName = products.backpack.name;
         const productPrice = products.backpack.price;
         const productDescription = products.backpack.description;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.addProductToCartFromDetailsPage();
         await productPage.verifyProductCartBadge(1);
@@ -104,51 +66,28 @@ test.describe("Product Details Page Tests", () => {
         await cartPage.verifyProductInCart(productName, productPrice, productDescription); // Verify that the product is in the cart with the correct name and price
     });
 
-    test("PDT-007: Verify Remove button is displayed on the Product Details Page.", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailsPage = new ProductDetailsPage(page);
-        const cartPage = new CartPage(page);
-        const userData = users.validUser;
+    test("PDT-007: Verify Remove button is displayed on the Product Details Page.", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.addProductToCartFromDetailsPage();
         await productDetailsPage.verifyRemoveButtonIsDisplayed();
     });
 
-    test("PDT-008: Remove product from cart on Product Details Page", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailsPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-008: Remove product from cart on Product Details Page", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.addProductToCartFromDetailsPage();
         await productDetailsPage.removeProductFromDetailsPage();
         await productDetailsPage.verifyRemoveProductFromDetailsPage();
     });
 
-    test("PDT-009: Add a product to cart from Product Details Page and verify cart quantity", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailsPage = new ProductDetailsPage(page);
-        const cartPage = new CartPage(page);
-        const userData = users.validUser;
+    test("PDT-009: Add a product to cart from Product Details Page and verify cart quantity", async ({ productPage, cartPage, productDetailsPage }) => {
         const productName = products.backpack.name;
         const productPrice = products.backpack.price;
         const productDescription = products.backpack.description;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
         await productDetailsPage.addProductToCartFromDetailsPage();
         await productPage.verifyProductCartBadge(1);
@@ -158,238 +97,113 @@ test.describe("Product Details Page Tests", () => {
         await cartPage.verifyProductInCart(productName, productPrice, productDescription);
     });
 
-    test("PDT-010: Return to Products Page from Product Details Page", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-010: Return to Products Page from Product Details Page", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.returnToProductsPage();
+        await productDetailsPage.returnToProductsPage();
         await productPage.verifyPageTitle();
         await productPage.verifyProductList();
     });
 
-    test("PDT-011: Verify Back to Products Button is Displayed", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-011: Verify Back to Products Button is Displayed", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.verifyBackToProductsButtonDisplayed();
+        await productDetailsPage.verifyBackToProductsButtonDisplayed();
     });
 
-    test("PDT-012: Verify Add to Cart Button is Displayed for a Product Not in Cart ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-012: Verify Add to Cart Button is Displayed for a Product Not in Cart ", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.verifyAddToCartButtonIsDisplayed();
-        await productDetailPage.verifyRemoveButtonIsNotDisplayed();
+        await productDetailsPage.verifyAddToCartButtonIsDisplayed();
+        await productDetailsPage.verifyRemoveButtonIsNotDisplayed();
     });
 
-    test("PDT-013: Add Product and Verify Button Changes to Remove ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-013: Add Product and Verify Button Changes to Remove ", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.addProductToCartFromDetailsPage();
+        await productDetailsPage.addProductToCartFromDetailsPage();
         await productPage.verifyProductCartBadge(1);
-        await productDetailPage.verifyAddToCartButtonIsNotDisplayed();
-        await productDetailPage.verifyRemoveButtonIsDisplayed();
+        await productDetailsPage.verifyAddToCartButtonIsNotDisplayed();
+        await productDetailsPage.verifyRemoveButtonIsDisplayed();
     });
 
-    test("PDT-014: Remove Product and Verify Button Changes Back to Add to Cart ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-014: Remove Product and Verify Button Changes Back to Add to Cart ", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.addProductToCartFromDetailsPage();
-        await productDetailPage.removeProductFromDetailsPage();
-        await productDetailPage.verifyRemoveProductFromDetailsPage();
+        await productDetailsPage.addProductToCartFromDetailsPage();
+        await productDetailsPage.removeProductFromDetailsPage();
+        await productDetailsPage.verifyRemoveProductFromDetailsPage();
     });
 
-    test("PDT-015: Verify Product Details for Sauce Labs Bike Light", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-015: Verify Product Details for Sauce Labs Bike Light", async ({ productPage, productDetailsPage }) => {
         const productName = products.bikelight.name;
         const productPrice = products.bikelight.price;
         const productDesc = products.bikelight.description;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.verifyProductDetails(productName, productPrice, productDesc);
-        await productDetailPage.verifyAddToCartButtonIsDisplayed();
+        await productDetailsPage.verifyProductDetails(productName, productPrice, productDesc);
+        await productDetailsPage.verifyAddToCartButtonIsDisplayed();
     });
 
-    test("PDT-016: Verify Product Details for Sauce Labs Bolt T-Shirt ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-016: Verify Product Details for Sauce Labs Bolt T-Shirt ", async ({ productPage, productDetailsPage }) => {
         const productName = products.boltTShirt.name;
         const productPrice = products.boltTShirt.price;
         const productDesc = products.boltTShirt.description;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.verifyProductDetails(productName, productPrice, productDesc);
-        await productDetailPage.verifyAddToCartButtonIsDisplayed();
+        await productDetailsPage.verifyProductDetails(productName, productPrice, productDesc);
+        await productDetailsPage.verifyAddToCartButtonIsDisplayed();
     });
 
-    test("PDT-017A: Add Different Products from Product Details Page ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    for (const data of productDetailData) {
+        test(`${data.testId}: ${data.testName}`, async ({ productPage, cartPage, productDetailsPage }) => {
+            await productPage.openProductDetails(data.name);
+            await productDetailsPage.verifyProductName(data.name);
+            await productDetailsPage.addProductToCartFromDetailsPage();
+            await productPage.verifyProductCartBadge(1);
+            await productDetailsPage.verifyRemoveButtonIsDisplayed();
+            await productPage.openCartPage();
+            await cartPage.verifyCartPageUrl();
+            await cartPage.verifyProductInCart(data.name, data.price, data.desc);
+        });
+    }
+
+    test("PDT-018: Verify Product Details Data Matches Product Listing ", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
-        const productPrice = products.backpack.price;
-        const productDescription = products.backpack.description;
-
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
-        await productPage.openProductDetails(productName);
-        await productDetailPage.addProductToCartFromDetailsPage();
-        await productPage.verifyProductCartBadge(1);
-        await productDetailPage.verifyRemoveButtonIsDisplayed();
-        await productPage.openCartPage();
-        await cartPage.verifyCartPageUrl();
-        await cartPage.verifyProductInCart(productName, productPrice, productDescription);
-    });
-
-    test("PDT-017B: Add Different Products from Product Details Page ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
-        const productName = products.bikelight.name;
-        const productPrice = products.bikelight.price;
-        const productDescription = products.bikelight.description;
-
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
-        await productPage.openProductDetails(productName);
-        await productDetailPage.addProductToCartFromDetailsPage();
-        await productPage.verifyProductCartBadge(1);
-        await productDetailPage.verifyRemoveButtonIsDisplayed();
-        await productPage.openCartPage();
-        await cartPage.verifyCartPageUrl();
-        await cartPage.verifyProductInCart(productName, productPrice, productDescription);
-    });
-
-    test("PDT-017C: Add Different Products from Product Details Page ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
-        const productName = products.boltTShirt.name;
-        const productPrice = products.boltTShirt.price;
-        const productDescription = products.boltTShirt.description;
-
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
-        await productPage.openProductDetails(productName);
-        await productDetailPage.addProductToCartFromDetailsPage();
-        await productPage.verifyProductCartBadge(1);
-        await productDetailPage.verifyRemoveButtonIsDisplayed();
-        await productPage.openCartPage();
-        await cartPage.verifyCartPageUrl();
-        await cartPage.verifyProductInCart(productName, productPrice, productDescription);
-    });
-
-    test("PDT-018: Verify Product Details Data Matches Product Listing ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
-        const productName = products.backpack.name;
-
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
 
         const productPageName = await productPage.getProductName(productName);
         const productPagePrice = await productPage.getProductPrice(productName);
         const productPageDesc = await productPage.getProductDescription(productName);
 
         await productPage.openProductDetails(productName);
-        await productDetailPage.verifyProductDetailMatch(productPageName, productPagePrice, productPageDesc);
+        await productDetailsPage.verifyProductDetailMatch(productPageName, productPagePrice, productPageDesc);
     });
 
-    test("PDT-019: Navigate Between Product Details and Products Page ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-019: Navigate Between Product Details and Products Page ", async ({ productPage, productDetailsPage }) => {
         const productName = products.backpack.name;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.returnToProductsPage();
+        await productDetailsPage.returnToProductsPage();
         await productPage.verifyProductPageUrl();
         await productPage.verifyPageTitle();
         await productPage.verifyProductList();
         await productPage.verifySpecificProductDisplayed(productName);
     });
 
-    test("PDT-020: Add Product, Return to Products, and Verify Cart ", async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const productDetailPage = new ProductDetailsPage(page);
-        const userData = users.validUser;
+    test("PDT-020: Add Product, Return to Products, and Verify Cart ", async ({ productPage, cartPage, productDetailsPage }) => {
         const productName = products.backpack.name;
         const productPrice = products.backpack.price;
         const productDescription = products.backpack.description;
 
-        await loginPage.gotoLoginPage();
-        await loginPage.login(userData.username, userData.password);
-        await productPage.gotoProductPage();
         await productPage.openProductDetails(productName);
-        await productDetailPage.addProductToCartFromDetailsPage();
+        await productDetailsPage.addProductToCartFromDetailsPage();
         await productPage.verifyProductCartBadge(1);
-        await productDetailPage.returnToProductsPage();
+        await productDetailsPage.returnToProductsPage();
         await productPage.verifyProductPageUrl();
         await productPage.verifyPageTitle();
         await productPage.verifyProductCartBadge(1);
@@ -398,5 +212,4 @@ test.describe("Product Details Page Tests", () => {
         await cartPage.verifyProductInCart(productName, productPrice, productDescription);
 
     });
-
 });

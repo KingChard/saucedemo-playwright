@@ -1,5 +1,5 @@
+import { test } from "../fixtures/pages.fixture";
 import { checkoutValidationData } from './../test-data/checkouts';
-import { test } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductPage } from "../pages/ProductPage";
 import { CartPage } from "../pages/CartPage";
@@ -8,11 +8,7 @@ import { users, usersWithCheckoutInfo } from "../test-data/users";
 import { products } from "../test-data/products";
 
 test.describe("Checkout Page Test", () => {
-    test('CHK-001: Open Checkout Information Page', async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const productPage = new ProductPage(page);
-        const cartPage = new CartPage(page);
-        const checkoutPage = new CheckoutPage(page);
+    test('CHK-001: Open Checkout Information Page', async ({ loginPage, productPage, cartPage, checkoutPage }) => {
         const userData = users.validUser;
         const productBackpackName = products.backpack.name;
 
@@ -76,6 +72,7 @@ test.describe("Checkout Page Test", () => {
         await checkoutPage.verifyCheckoutOverviewPageTitle();
     });
 
+    //Parameterized test for checkout
     for (const data of checkoutValidationData) {
         test(`${data.testId}: ${data.testName}`, async ({ page }) => {
             const loginPage = new LoginPage(page);
@@ -103,6 +100,9 @@ test.describe("Checkout Page Test", () => {
             await checkoutPage.verifyCheckoutInformationPageUrl();
         });
     }
+
+    // Legacy standalone version kept for reference.
+    // Replaced by parameterized test above.
 
     // test('CHK-004: Verify First Name is Required', async ({ page }) => {
     //     const loginPage = new LoginPage(page);

@@ -1,4 +1,5 @@
 import { Locator, Page, expect } from "@playwright/test";
+import { productData } from "../test-data/products";
 
 export class ProductPage {
 
@@ -144,9 +145,14 @@ export class ProductPage {
     }
 
     async openProductDetails(productName: string) {
-        const specificProducts = this.specificProduct.filter({ hasText: productName });
-        const specificLinkName = specificProducts.getByTestId('inventory-item-name');
-        await specificLinkName.click();
+        const specificProducts = this.specificProduct.filter({
+            hasText: productName
+        });
+
+        const productNameElement =
+            specificProducts.getByTestId('inventory-item-name');
+
+        await productNameElement.click();
     }
 
     async verifySpecificProductRemoveButtonDisplayed(productName: string) {
@@ -177,7 +183,39 @@ export class ProductPage {
         return await productDescElement.textContent();
     }
 
-    async verifyProductCartBadgeIsNotVisible(){
+    async verifyProductCartBadgeIsNotVisible() {
         await expect(this.shoppingCartBadge).not.toBeVisible();
+    }
+
+    async sortProducts(sortOption: string) {
+        await this.sortDropdown.selectOption({ label: sortOption });
+    }
+
+    async verifyProductNamesSorted(expectedOrder: string) {
+        const productNames = await this.getAllProductNames();
+
+        let expectedProductNames = [...productNames];
+
+        if (expectedOrder === 'ascending') {
+            expectedProductNames.sort((a, b) => a.localeCompare(b));
+        } else if (expectedOrder === 'descending') {
+            expectedProductNames.sort((a, b) => b.localeCompare(a));
+        }
+
+        expect(productNames).toEqual(expectedProductNames);
+    }
+
+    async verifyProductPricesSorted(expectedOrder: string) {
+        const productPrices = await this.getAllProductPrice();
+
+        const expectedProductPrices = [...productPrices];
+
+        if (expectedOrder === 'ascending') {
+            expectedProductPrices.sort((a, b) => a - b);
+        } else if (expectedOrder === 'descending') {
+            expectedProductPrices.sort((a, b) => b - a);
+        }
+
+        expect(productPrices).toEqual(expectedProductPrices);
     }
 }

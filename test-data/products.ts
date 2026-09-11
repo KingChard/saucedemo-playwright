@@ -21,3 +21,34 @@ export const productData = [
     description: "A red light isn't the desired state in testing but it sure helps when riding your bike at night. Water-resistant with 3 lighting modes, 1 AAA battery included.",
 	},
 ]
+
+export const productSorting = [
+	{
+    testId: 'TC03', 
+    testName: 'Sort products by price from low to high',
+	sortBy: 'price',
+    sortOption: 'Price (low to high)',
+    expectedOrder: 'ascending',
+	},
+	{
+    testId: 'TC04', 
+    testName: 'Sort products by price from high to low',
+	sortBy: 'price',
+    sortOption: 'Price (high to low)',
+    expectedOrder: 'descending',
+	},
+	{
+    testId: 'TC05', 
+    testName: 'Sort products by name from A to Z',
+	sortBy: 'name',
+    sortOption: 'Name (A to Z)',
+    expectedOrder: 'ascending',
+	},
+	{
+    testId: 'TC06', 
+    testName: 'Sort products by name from Z to A',
+	sortBy: 'name',
+    sortOption: 'Name (Z to A)',
+    expectedOrder: 'descending',
+	},
+]

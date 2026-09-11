@@ -1,6 +1,7 @@
 import { Locator, Page, expect } from "@playwright/test";
 
 export class ProductDetailsPage {
+    readonly productDetails: Locator;
     readonly page: Page;
     readonly productDetailName: Locator;
     readonly productDetailPrice: Locator;
@@ -14,14 +15,31 @@ export class ProductDetailsPage {
 
     constructor(page: Page) {
         this.page = page;
-        this.productDetailName = page.getByTestId('inventory-item-name');
-        this.productDetailPrice = page.getByTestId('inventory-item-price');
-        this.productDetailDescription = page.getByTestId('inventory-item-desc');
-        this.addToCartDetailButton = page.getByRole('button', { name: 'Add to cart' });
-        this.removeDetailButton = page.getByRole('button', { name: 'Remove' });
+
+        this.productDetails = page.locator('.inventory_details');
+    
+        this.productDetailName =
+            this.productDetails.getByTestId('inventory-item-name');
+    
+        this.productDetailPrice =
+            this.productDetails.getByTestId('inventory-item-price');
+    
+        this.productDetailDescription =
+            this.productDetails.getByTestId('inventory-item-desc');
+    
+        this.addToCartDetailButton =
+            this.productDetails.getByRole('button', { name: 'Add to cart' });
+    
+        this.removeDetailButton =
+            this.productDetails.getByRole('button', { name: 'Remove' });
+    
         this.cartBadge = page.getByTestId('shopping-cart-badge');
-        this.cartButton = page.getByRole('link', { name: /shopping cart/i });
-        this.backToProductsButton = page.getByRole('button', { name: 'Back to products' })
+    
+        this.cartButton =
+            page.getByRole('link', { name: /shopping cart/i });
+    
+        this.backToProductsButton =
+            page.getByRole('button', { name: 'Back to products' });
     }
 
     async verifyProductDetails(productName: string, productPrice: string, productDescription: string) {

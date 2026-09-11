@@ -21,7 +21,7 @@ export class LoginPage {
     async gotoLoginPage() {
         await this.page.goto('/');
     }
-    
+
     //ACTIONS
     async login(username: string, password: string) {
         await this.usernameInput.fill(username);
