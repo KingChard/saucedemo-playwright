@@ -1,9 +1,6 @@
-import { test } from "../fixtures/pages.fixture";
-import { LoginPage } from "../pages/LoginPage";
-import { ProductPage } from "../pages/ProductPage";
-import { users } from "../test-data/users";
-import { products, productData, productSorting } from "../test-data/products";
-import { CartPage } from "../pages/CartPage";
+import { test } from "../../fixtures/pages.fixture";
+import { users } from "../../test-data/users";
+import { productData, productSorting } from "../../test-data/products";
 
 test.describe("Product Page Tests", () => {
     test.beforeEach(async ({ loginPage }) => {

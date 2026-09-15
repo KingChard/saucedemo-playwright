@@ -1,6 +1,6 @@
-import { test } from "../fixtures/pages.fixture";
-import { users } from "../test-data/users";
-import { products } from "../test-data/products";
+import { test } from "../../fixtures/pages.fixture";
+import { users } from "../../test-data/users";
+import { products } from "../../test-data/products";
 
 test.describe("Cart Page Tests", () => {
     test.beforeEach(async ({ loginPage }) => {
@@ -160,19 +160,19 @@ test.describe("Cart Page Tests", () => {
 
         test('CT-019: Verify Checkout Button Navigation ', async ({ cartPage, checkoutPage }) => {
             const backpackData = products.backpack;
-    
+
             await cartPage.verifyProductInCart(backpackData.name, backpackData.price, backpackData.description);
             await cartPage.proceedToCheckout();
             await checkoutPage.verifyCheckoutInformationPageUrl();
             await checkoutPage.verifyCheckoutInformationPageTitle();
-    
+
         });
-    
+
         test('CT-020: Verify Product Data Before Starting Checkout ', async ({ productPage, cartPage }) => {
             const backpackData = products.backpack;
-    
+
             await productPage.verifyProductCartBadge(1);
-    
+
             await cartPage.verifyCartBadgeCount(1);
             await cartPage.verifyProductInCart(backpackData.name, backpackData.price, backpackData.description);
             await cartPage.verifyProductQuantity(backpackData.name, 1);

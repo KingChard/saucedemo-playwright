@@ -1,7 +1,7 @@
-import { test } from "../fixtures/pages.fixture";
-import { LoginPage } from "../pages/LoginPage";
-import { users } from "../test-data/users";
-import { loginValidationData } from "../test-data/login"
+import { test } from "../../fixtures/pages.fixture";
+import { LoginPage } from "../../pages/LoginPage";
+import { users } from "../../test-data/users";
+import { loginValidationData } from "../../test-data/login";
 
 test.describe("Login Tests", () => {
 
